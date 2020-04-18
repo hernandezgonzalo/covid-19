@@ -13,6 +13,11 @@ const addNearCase = async newCase => {
           maxDistance: 1000,
           spherical: true
         }
+      },
+      {
+        $match: {
+          role: "user"
+        }
       }
     ]);
 
