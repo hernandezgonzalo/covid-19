@@ -1,0 +1,54 @@
+{
+  "name": "covid19",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@date-io/date-fns": "^1.3.13",
+    "@material-ui/core": "^4.9.5",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.46",
+    "@material-ui/pickers": "^3.2.10",
+    "@react-google-maps/api": "^1.8.6",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
+    "cloudinary-core": "^2.8.2",
+    "date-fns": "^2.11.1",
+    "flag-icon-css": "^3.4.6",
+    "history": "^4.10.1",
+    "material-table": "^1.57.2",
+    "material-ui-confirm": "^2.0.4",
+    "react": "^16.13.0",
+    "react-chartjs-2": "^2.9.0",
+    "react-dom": "^16.13.0",
+    "react-hook-form": "^5.3.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.0",
+    "react-swipeable-views": "^0.13.9",
+    "react-time-ago": "^5.0.7",
+    "socket.io-client": "^2.3.0"
+  },
+  "scripts": {
+    "start": "PORT=1234 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

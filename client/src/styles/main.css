@@ -1,0 +1,11 @@
+/* Tabs */
+.react-swipeable-view-container {
+  height: 100%;
+}
+
+/* Google Maps */
+.gmnoprint a,
+.gmnoprint span,
+.gm-style-cc {
+  display: none;
+}
