@@ -26,7 +26,7 @@ const createUsers = async users => {
   for (user of users) {
     const { username, name, surname, image } = user;
     try {
-      await mongoose.connect(process.env.DBURL, {
+      await mongoose.connect(process.env.MONGODB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true

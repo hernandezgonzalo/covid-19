@@ -7,7 +7,7 @@ const Case = require("../models/Case");
 let totalCases = 0;
 
 const registerCases = async () => {
-  await mongoose.connect(process.env.DBURL, {
+  await mongoose.connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
