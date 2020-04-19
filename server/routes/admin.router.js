@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Case = require("../models/Case");
+const _ = require("lodash");
 
 const sortFieldMapper = {
   name: "name",
   surname: "surname",
   city: "geocode.city",
   country: "geocode.country",
-  date: "user_case.0.createdAt"
+  date: "user_case.createdAt",
+  active: "user_case"
 };
 
 // administrator control panel queries
@@ -16,7 +18,7 @@ router.post("/", async (req, res, next) => {
   const { pageSize, page, search, orderBy, orderDirection } = req.body;
   const sortField = orderBy
     ? sortFieldMapper[orderBy.field]
-    : "user_case.0.createdAt";
+    : "user_case.createdAt";
 
   try {
     const users = await User.aggregate([
@@ -29,12 +31,16 @@ router.post("/", async (req, res, next) => {
         }
       },
       {
+        $unwind: {
+          path: "$user_case",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
         $match: {
           $and: [
             {
-              "user_case.0": {
-                $exists: true
-              }
+              role: "user"
             },
             {
               $or: [
@@ -60,16 +66,21 @@ router.post("/", async (req, res, next) => {
     const usersFormatted = users.map(user => {
       let image;
       if (user.image) image = user.image.url || user.image;
-      return {
+      const userObj = {
         location: user.location,
         name: user.name,
         surname: user.surname,
         image,
         city: user.geocode.city,
-        country: user.geocode.country,
-        case: user.user_case[0]._id,
-        date: user.user_case[0].createdAt
+        country: user.geocode.country
       };
+      if (!_.isEmpty(user.user_case)) {
+        userObj.case = user.user_case._id;
+        userObj.date = user.user_case.createdAt;
+        userObj.active = true;
+      } else userObj.active = false;
+
+      return userObj;
     });
 
     return res.json({

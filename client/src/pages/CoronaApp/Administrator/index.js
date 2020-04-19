@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import { Grid, Avatar } from "@material-ui/core";
+import { Grid, Avatar, Switch } from "@material-ui/core";
 import MaterialTable from "material-table";
 import { searchUsers, findCase } from "../../../services/adminService";
 import { useStyles } from "./styles";
@@ -34,7 +34,7 @@ const Administrator = () => {
       pageSize: 20,
       pageSizeOptions: [],
       showTitle: false,
-      actionsColumnIndex: 6,
+      actionsColumnIndex: 7,
       draggable: false,
       addRowPosition: "first"
     }
@@ -45,6 +45,8 @@ const Administrator = () => {
     history.push("/app", { caseToShow });
   };
 
+  const handleChangeActive = e => e.preventDefault();
+
   return (
     <Grid item lg={6} className={classes.tableWrapper}>
       <MaterialTable
@@ -54,7 +56,8 @@ const Administrator = () => {
           {
             field: "image",
             width: 1,
-            cellStyle: { whiteSpace: "nowrap" },
+            headerStyle: { padding: 5 },
+            cellStyle: { padding: 5 },
             render: rowData => (
               <Avatar
                 alt={rowData.name}
@@ -64,15 +67,51 @@ const Administrator = () => {
             ),
             editComponent: () => <Avatar className={classes.image} />
           },
-          { title: "Name", field: "name", customSort: a => a },
-          { title: "Surname", field: "surname", customSort: a => a },
-          { title: "City", field: "city", customSort: a => a },
-          { title: "Country", field: "country", customSort: a => a },
+          {
+            title: "Name",
+            field: "name",
+            headerStyle: { padding: 5 },
+            cellStyle: { padding: 5 },
+            customSort: a => a
+          },
+          {
+            title: "Surname",
+            field: "surname",
+            headerStyle: { padding: 5 },
+            cellStyle: { padding: 5 },
+            customSort: a => a
+          },
+          {
+            title: "City",
+            field: "city",
+            headerStyle: { padding: 5 },
+            cellStyle: { padding: 5 },
+            customSort: a => a
+          },
+          {
+            title: "Country",
+            field: "country",
+            headerStyle: { padding: 5 },
+            cellStyle: { padding: 5 },
+            customSort: a => a
+          },
           {
             title: "Date",
             field: "date",
             defaultSort: "desc",
-            render: rowData => <TimeAgo date={new Date(rowData.date)} />
+            headerStyle: { padding: 5 },
+            cellStyle: { padding: 5 },
+            render: rowData =>
+              rowData.active && <TimeAgo date={new Date(rowData.date)} />
+          },
+          {
+            title: "Active",
+            field: "active",
+            headerStyle: { padding: 5 },
+            cellStyle: { padding: 5 },
+            render: rowData => (
+              <Switch checked={rowData.active} onChange={handleChangeActive} />
+            )
           }
         ]}
         data={query =>
