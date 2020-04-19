@@ -1,39 +1,107 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/User");
 const Case = require("../models/Case");
+const _ = require("lodash");
 
+const sortFieldMapper = {
+  name: "name",
+  surname: "surname",
+  city: "geocode.city",
+  country: "geocode.country",
+  date: "user_case.createdAt",
+  active: "user_case"
+};
+
+// administrator control panel queries
 router.post("/", async (req, res, next) => {
-  const { pageSize, page, search } = req.body;
-  try {
-    const cases = await Case.find({ username: { $regex: "ad" } })
-      .populate("user")
-      .sort({ createdAt: -1 })
-      .skip(page * pageSize)
-      .limit(pageSize);
+  const { pageSize, page, search, orderBy, orderDirection } = req.body;
+  const sortField = orderBy
+    ? sortFieldMapper[orderBy.field]
+    : "user_case.createdAt";
 
-    const casesFormatted = cases.map(c => {
+  try {
+    const users = await User.aggregate([
+      {
+        $lookup: {
+          from: "cases",
+          localField: "_id",
+          foreignField: "user",
+          as: "user_case"
+        }
+      },
+      {
+        $unwind: {
+          path: "$user_case",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $and: [
+            {
+              role: "user"
+            },
+            {
+              $or: [
+                { name: { $regex: search, $options: "i" } },
+                { surname: { $regex: search, $options: "i" } }
+              ]
+            }
+          ]
+        }
+      },
+      { $sort: { [sortField]: orderDirection === "asc" ? 1 : -1 } },
+      { $skip: page * pageSize },
+      { $limit: pageSize }
+    ]);
+
+    const count = await User.find({
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { surname: { $regex: search, $options: "i" } }
+      ]
+    }).countDocuments();
+
+    const usersFormatted = users.map(user => {
       let image;
-      if (c.user.image) image = c.user.image.url || c.user.image;
-      return {
-        id: c.id,
-        location: c.user.location,
-        name: c.user.name,
-        surname: c.user.surname,
+      if (user.image) image = user.image.url || user.image;
+      const userObj = {
+        location: user.location,
+        name: user.name,
+        surname: user.surname,
         image,
-        date: c.createdAt,
-        city: c.user.geocode.city,
-        country: c.user.geocode.country
+        city: user.geocode.city,
+        country: user.geocode.country
       };
+      if (!_.isEmpty(user.user_case)) {
+        userObj.case = user.user_case._id;
+        userObj.date = user.user_case.createdAt;
+        userObj.active = true;
+      } else userObj.active = false;
+
+      return userObj;
     });
 
-    res.json({
+    return res.json({
       success: true,
-      cases: casesFormatted,
-      count: cases.length,
-      page
+      count,
+      page,
+      users: usersFormatted
     });
   } catch (error) {
-    res.json({ success: false, error });
+    res.json({ success: false, error: error.message });
+  }
+});
+
+// look for a case to show in the map
+router.post("/find-case", async (req, res, next) => {
+  const { caseId } = req.body;
+  try {
+    const caseToShow = await Case.findById(caseId).populate("user");
+    return res.json({ success: true, caseToShow });
+  } catch (error) {
+    res.json({ success: false, error: error.message });
   }
 });
 

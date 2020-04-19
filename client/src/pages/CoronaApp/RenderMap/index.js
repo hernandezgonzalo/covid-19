@@ -15,6 +15,7 @@ import { useUser } from "../../../services/authService";
 import { NotifierContext } from "../../../contexts/NotifierContext";
 import _ from "lodash";
 import { youAreHere } from "./custom/youAreHere";
+import { FindAPlace } from "./custom/FindAPlace";
 
 export const RenderMap = ({ mapOptions, caseToShow }) => {
   const [cases, setCases] = useState();
@@ -66,6 +67,7 @@ export const RenderMap = ({ mapOptions, caseToShow }) => {
         zoom={initialZoom}
         onLoad={map => !isAdmin && youAreHere(map, user)}
       >
+        <FindAPlace />
         <CenterMap />
         {!isAdmin && <UserControlPanel {...{ cases, setSelected, selected }} />}
         <MarkerClusterer>

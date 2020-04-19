@@ -40,6 +40,7 @@ const NotifierContextProvider = props => {
         getNotifications().then(res => setNotifications(res.notifications));
       });
     }
+    return () => socket.off("broadcast");
   }, [user]);
 
   useEffect(() => {

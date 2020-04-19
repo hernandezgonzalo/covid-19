@@ -24,7 +24,8 @@ const userSchema = new Schema(
     geocode: { type: Object }
   },
   {
-    timestamps: true
+    timestamps: true,
+    collation: { locale: "es" }
   }
 );
 
