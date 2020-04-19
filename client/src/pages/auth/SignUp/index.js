@@ -178,7 +178,7 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
-      {<LoginDialog {...{ openLogin, setOpenLogin }} />}
+      <LoginDialog {...{ openLogin, setOpenLogin }} />
     </Container>
   );
 }

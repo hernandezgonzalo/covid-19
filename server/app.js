@@ -11,7 +11,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 
 mongoose
-  .connect(process.env.DBURL, {
+  .connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
@@ -33,7 +33,7 @@ const debug = require("debug")(
 const app = express();
 
 // Cross Domain CORS whitelist
-const whitelist = ["http://localhost:1234"];
+const whitelist = [process.env.CLIENT];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
