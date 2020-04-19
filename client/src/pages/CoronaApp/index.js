@@ -17,7 +17,7 @@ export const useStyles = makeStyles(() => ({
   }
 }));
 
-const libraries = ["visualization"];
+const libraries = ["visualization", "places"];
 
 export const CoronaApp = withProtected(() => {
   const historyBrowser = createBrowserHistory();
