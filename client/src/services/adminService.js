@@ -39,3 +39,12 @@ export const activeUser = async userId => {
     throw error;
   }
 };
+
+export const inactiveUser = async userId => {
+  try {
+    const res = await api.post("/inactive", { userId });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

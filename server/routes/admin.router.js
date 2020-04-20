@@ -129,4 +129,23 @@ router.post("/active", async (req, res, next) => {
   }
 });
 
+// toggle status of an user to inactive
+router.post("/inactive", async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const userCase = await Case.findOne({ user: userId });
+    if (userCase) {
+      const removedCase = await userCase.remove();
+      await removeNearCase(removedCase);
+      return res.json({ success: true, case: removedCase });
+    } else
+      res.json({
+        success: false,
+        message: "This user doesn't have a positive case registered"
+      });
+  } catch (error) {
+    res.json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;

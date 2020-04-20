@@ -4,7 +4,8 @@ import MaterialTable from "material-table";
 import {
   searchUsers,
   findCase,
-  activeUser
+  activeUser,
+  inactiveUser
 } from "../../../services/adminService";
 import { useStyles } from "./styles";
 import TimeAgo from "../../../components/ui/TimeAgo";
@@ -45,13 +46,16 @@ const Administrator = () => {
   };
 
   const handleOnRowClick = async (e, selectedRow) => {
-    const { caseToShow } = await findCase(selectedRow.case);
-    history.push("/app", { caseToShow });
+    if (selectedRow.active) {
+      const { caseToShow } = await findCase(selectedRow.case);
+      history.push("/app", { caseToShow });
+    }
   };
 
-  const handleChangeActive = (e, rowData, table) => {
-    if (rowData.active) console.log("remove case");
-    else activeUser(rowData.id).then(res => table.onQueryChange());
+  const handleChangeActive = (rowData, table) => {
+    if (rowData.active)
+      inactiveUser(rowData.id).then(() => table.onQueryChange());
+    else activeUser(rowData.id).then(() => table.onQueryChange());
   };
 
   return (
@@ -78,6 +82,7 @@ const Administrator = () => {
           {
             title: "Name",
             field: "name",
+            defaultSort: "asc",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             customSort: a => a
@@ -106,7 +111,6 @@ const Administrator = () => {
           {
             title: "Date",
             field: "date",
-            defaultSort: "desc",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             render: rowData =>
@@ -120,7 +124,8 @@ const Administrator = () => {
             render: rowData => (
               <Switch
                 checked={rowData.active}
-                onChange={e => handleChangeActive(e, rowData, tableRef.current)}
+                onChange={() => handleChangeActive(rowData, tableRef.current)}
+                onClick={e => e.stopPropagation()}
               />
             )
           }
