@@ -1,7 +1,12 @@
 import React, { createRef } from "react";
 import { Grid, Avatar, Switch } from "@material-ui/core";
 import MaterialTable from "material-table";
-import { searchUsers, findCase } from "../../../services/adminService";
+import {
+  searchUsers,
+  findCase,
+  activeUser,
+  inactiveUser
+} from "../../../services/adminService";
 import { useStyles } from "./styles";
 import TimeAgo from "../../../components/ui/TimeAgo";
 import { useHistory } from "react-router-dom";
@@ -41,11 +46,17 @@ const Administrator = () => {
   };
 
   const handleOnRowClick = async (e, selectedRow) => {
-    const { caseToShow } = await findCase(selectedRow.case);
-    history.push("/app", { caseToShow });
+    if (selectedRow.active) {
+      const { caseToShow } = await findCase(selectedRow.case);
+      history.push("/app", { caseToShow });
+    }
   };
 
-  const handleChangeActive = e => e.preventDefault();
+  const handleChangeActive = (rowData, table) => {
+    if (rowData.active)
+      inactiveUser(rowData.id).then(() => table.onQueryChange());
+    else activeUser(rowData.id).then(() => table.onQueryChange());
+  };
 
   return (
     <Grid item lg={6} className={classes.tableWrapper}>
@@ -53,6 +64,7 @@ const Administrator = () => {
         tableRef={tableRef}
         {...options}
         columns={[
+          { field: "id", hidden: true },
           {
             field: "image",
             width: 1,
@@ -70,6 +82,7 @@ const Administrator = () => {
           {
             title: "Name",
             field: "name",
+            defaultSort: "asc",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             customSort: a => a
@@ -98,7 +111,6 @@ const Administrator = () => {
           {
             title: "Date",
             field: "date",
-            defaultSort: "desc",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             render: rowData =>
@@ -110,7 +122,11 @@ const Administrator = () => {
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             render: rowData => (
-              <Switch checked={rowData.active} onChange={handleChangeActive} />
+              <Switch
+                checked={rowData.active}
+                onChange={() => handleChangeActive(rowData, tableRef.current)}
+                onClick={e => e.stopPropagation()}
+              />
             )
           }
         ]}
