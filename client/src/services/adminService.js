@@ -48,3 +48,12 @@ export const inactiveUser = async userId => {
     throw error;
   }
 };
+
+export const deleteUser = async userId => {
+  try {
+    const res = await api.post("/delete", { userId });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

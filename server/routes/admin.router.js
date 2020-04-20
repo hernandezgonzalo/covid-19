@@ -139,12 +139,28 @@ router.post("/inactive", async (req, res, next) => {
       await removeNearCase(removedCase);
       return res.json({ success: true, case: removedCase });
     } else
-      res.json({
+      return res.json({
         success: false,
         message: "This user doesn't have a positive case registered"
       });
   } catch (error) {
-    res.json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
+  }
+});
+
+// delete user
+router.post("/delete", async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const userCase = await Case.findOne({ user: userId });
+    if (userCase) userCase.remove();
+    const user = await User.findById(userId);
+    if (user) {
+      await user.remove();
+      return res.json({ success: true, user });
+    } else return res.json({ success: false, message: "User not found" });
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
   }
 });
 
