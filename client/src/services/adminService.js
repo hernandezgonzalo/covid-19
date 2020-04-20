@@ -30,3 +30,21 @@ export const findCase = async caseId => {
     throw error;
   }
 };
+
+export const activeUser = async userId => {
+  try {
+    const res = await api.post("/active", { userId });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const inactiveUser = async userId => {
+  try {
+    const res = await api.post("/inactive", { userId });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

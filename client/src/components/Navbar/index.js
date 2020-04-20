@@ -43,7 +43,12 @@ export const Navbar = ({ toggleTheme }) => {
   let userImage;
   if (user) {
     const userImg = _.get(user, "image.public_id");
-    userImage = cloudy.url(userImg, { width: 50, height: 50, crop: "fill" });
+    userImage = cloudy.url(userImg, {
+      width: 50,
+      height: 50,
+      crop: "fill",
+      secure: true
+    });
   }
 
   const UserAvatar = () => (

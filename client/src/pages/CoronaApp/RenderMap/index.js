@@ -66,6 +66,7 @@ export const RenderMap = ({ mapOptions, caseToShow }) => {
         center={initialCenter}
         zoom={initialZoom}
         onLoad={map => !isAdmin && youAreHere(map, user)}
+        onUnmount={() => delete window.google.maps.version}
       >
         <FindAPlace />
         <CenterMap />

@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const Case = require("../models/Case");
 const _ = require("lodash");
+const { addNearCase, removeNearCase } = require("../lib/notifyNearCase");
 
 const sortFieldMapper = {
   name: "name",
@@ -13,7 +14,7 @@ const sortFieldMapper = {
   active: "user_case"
 };
 
-// administrator control panel queries
+// administrator control panel queries: search users
 router.post("/", async (req, res, next) => {
   const { pageSize, page, search, orderBy, orderDirection } = req.body;
   const sortField = orderBy
@@ -67,6 +68,7 @@ router.post("/", async (req, res, next) => {
       let image;
       if (user.image) image = user.image.url || user.image;
       const userObj = {
+        id: user._id,
         location: user.location,
         name: user.name,
         surname: user.surname,
@@ -100,6 +102,47 @@ router.post("/find-case", async (req, res, next) => {
   try {
     const caseToShow = await Case.findById(caseId).populate("user");
     return res.json({ success: true, caseToShow });
+  } catch (error) {
+    res.json({ success: false, error: error.message });
+  }
+});
+
+// toggle status of an user to active
+router.post("/active", async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const userCase = await Case.findOne({ user: userId });
+    if (!userCase) {
+      const newCase = await Case.create({
+        user: userId
+      });
+      await addNearCase(newCase);
+      const newCaseRes = await Case.findById(newCase._id).populate("user");
+      return res.json({ success: true, case: newCaseRes });
+    } else
+      res.json({
+        success: false,
+        message: "This user has already a positive case registered"
+      });
+  } catch (error) {
+    res.json({ success: false, error: error.message });
+  }
+});
+
+// toggle status of an user to inactive
+router.post("/inactive", async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const userCase = await Case.findOne({ user: userId });
+    if (userCase) {
+      const removedCase = await userCase.remove();
+      await removeNearCase(removedCase);
+      return res.json({ success: true, case: removedCase });
+    } else
+      res.json({
+        success: false,
+        message: "This user doesn't have a positive case registered"
+      });
   } catch (error) {
     res.json({ success: false, error: error.message });
   }
