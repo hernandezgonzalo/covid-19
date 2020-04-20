@@ -63,7 +63,8 @@ export default function Notifications({ notifications, handleMenuClose }) {
     const userImage = cloudy.url(userImg, {
       width: 80,
       height: 80,
-      crop: "fill"
+      crop: "fill",
+      secure: true
     });
     return { ...notify, userImage };
   });

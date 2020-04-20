@@ -1,7 +1,11 @@
 import React, { createRef } from "react";
 import { Grid, Avatar, Switch } from "@material-ui/core";
 import MaterialTable from "material-table";
-import { searchUsers, findCase } from "../../../services/adminService";
+import {
+  searchUsers,
+  findCase,
+  activeUser
+} from "../../../services/adminService";
 import { useStyles } from "./styles";
 import TimeAgo from "../../../components/ui/TimeAgo";
 import { useHistory } from "react-router-dom";
@@ -45,7 +49,10 @@ const Administrator = () => {
     history.push("/app", { caseToShow });
   };
 
-  const handleChangeActive = e => e.preventDefault();
+  const handleChangeActive = (e, rowData, table) => {
+    if (rowData.active) console.log("remove case");
+    else activeUser(rowData.id).then(res => table.onQueryChange());
+  };
 
   return (
     <Grid item lg={6} className={classes.tableWrapper}>
@@ -53,6 +60,7 @@ const Administrator = () => {
         tableRef={tableRef}
         {...options}
         columns={[
+          { field: "id", hidden: true },
           {
             field: "image",
             width: 1,
@@ -110,7 +118,10 @@ const Administrator = () => {
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             render: rowData => (
-              <Switch checked={rowData.active} onChange={handleChangeActive} />
+              <Switch
+                checked={rowData.active}
+                onChange={e => handleChangeActive(e, rowData, tableRef.current)}
+              />
             )
           }
         ]}

@@ -28,7 +28,12 @@ const SelectedInfo = ({ selected }) => {
 
   const cloudinaryImg = _.get(selected.user, "image.public_id");
   const userImage = cloudinaryImg
-    ? cloudy.url(cloudinaryImg, { width: 128, height: 128, crop: "fill" })
+    ? cloudy.url(cloudinaryImg, {
+        width: 128,
+        height: 128,
+        crop: "fill",
+        secure: true
+      })
     : selected.user.image;
 
   return (
