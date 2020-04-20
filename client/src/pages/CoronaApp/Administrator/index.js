@@ -5,7 +5,8 @@ import {
   searchUsers,
   findCase,
   activeUser,
-  inactiveUser
+  inactiveUser,
+  deleteUser
 } from "../../../services/adminService";
 import { useStyles } from "./styles";
 import TimeAgo from "../../../components/ui/TimeAgo";
@@ -154,8 +155,7 @@ const Administrator = () => {
             }),
           onRowDelete: oldData =>
             new Promise(resolve => {
-              console.log(oldData);
-              resolve();
+              deleteUser(oldData.id).then(resolve());
             })
         }}
         actions={[
