@@ -81,6 +81,7 @@ const RenderMap = ({ mapOptions }) => {
       }}
       options={mapOptions}
       onLoad={onLoad}
+      onUnmount={() => delete window.google.maps.version}
     ></GoogleMap>
   );
 };
