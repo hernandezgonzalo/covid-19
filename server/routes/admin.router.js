@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Case = require("../models/Case");
+const Notification = require("../models/Notification");
 const _ = require("lodash");
 const { addNearCase, removeNearCase } = require("../lib/notifyNearCase");
 
@@ -148,12 +149,16 @@ router.post("/inactive", async (req, res, next) => {
   }
 });
 
-// delete user
+// delete user and their case/notifications
 router.post("/delete", async (req, res, next) => {
   const { userId } = req.body;
   try {
     const userCase = await Case.findOne({ user: userId });
     if (userCase) userCase.remove();
+
+    await Notification.deleteMany({ user: userId });
+    await removeNearCase(userCase);
+
     const user = await User.findById(userId);
     if (user) {
       await user.remove();
