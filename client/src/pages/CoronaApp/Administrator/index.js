@@ -11,6 +11,7 @@ import {
 import { useStyles } from "./styles";
 import TimeAgo from "../../../components/ui/TimeAgo";
 import { useHistory } from "react-router-dom";
+import DateAndTimePicker from "./../../../components/ui/DateAndTimePicker";
 
 const Administrator = () => {
   const tableRef = createRef();
@@ -100,14 +101,16 @@ const Administrator = () => {
             field: "city",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
-            customSort: a => a
+            customSort: a => a,
+            editable: "never"
           },
           {
             title: "Country",
             field: "country",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
-            customSort: a => a
+            customSort: a => a,
+            editable: "never"
           },
           {
             title: "Date",
@@ -115,7 +118,8 @@ const Administrator = () => {
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             render: rowData =>
-              rowData.active && <TimeAgo date={new Date(rowData.date)} />
+              rowData.active && <TimeAgo date={new Date(rowData.date)} />,
+            editComponent: editProps => <DateAndTimePicker {...{ editProps }} />
           },
           {
             title: "Active",
@@ -128,6 +132,12 @@ const Administrator = () => {
                 onChange={() => handleChangeActive(rowData, tableRef.current)}
                 onClick={e => e.stopPropagation()}
               />
+            ),
+            editComponent: props => (
+              <Switch
+                onChange={() => props.onChange(!props.value)}
+                checked={!!props.value}
+              ></Switch>
             )
           }
         ]}
