@@ -57,3 +57,12 @@ export const deleteUser = async userId => {
     throw error;
   }
 };
+
+export const addUser = async data => {
+  try {
+    const res = await api.post("/add", data);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

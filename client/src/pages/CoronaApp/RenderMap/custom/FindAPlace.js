@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useGoogleMap } from "@react-google-maps/api";
 import { Autocomplete } from "@react-google-maps/api";
+import { MapContext } from "../../../../contexts/MapContext";
 
 export const FindAPlace = () => {
   const [marker, setMarker] = useState();
   const [autocomplete, setAutocomplete] = useState(null);
+  const { setMapPlace } = useContext(MapContext);
   const map = useGoogleMap();
 
   useEffect(() => {
@@ -27,6 +29,25 @@ export const FindAPlace = () => {
         position: place.geometry.location
       });
       setMarker(newMarker);
+
+      // set the context state to be used when adding a new user
+      for (let address of place.address_components) {
+        if (address.types.includes("country"))
+          setMapPlace(mapPlace => ({
+            ...mapPlace,
+            country: address.long_name
+          }));
+        if (address.types.includes("locality"))
+          setMapPlace(mapPlace => ({
+            ...mapPlace,
+            city: address.long_name
+          }));
+      }
+      setMapPlace(mapPlace => ({
+        ...mapPlace,
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng()
+      }));
     }
   };
 

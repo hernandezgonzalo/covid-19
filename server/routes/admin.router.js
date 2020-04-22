@@ -5,6 +5,8 @@ const Case = require("../models/Case");
 const Notification = require("../models/Notification");
 const _ = require("lodash");
 const { addNearCase, removeNearCase } = require("../lib/notifyNearCase");
+const geocoder = require("../lib/geocoder");
+const { hashPassword } = require("../lib/hash");
 
 const sortFieldMapper = {
   name: "name",
@@ -166,6 +168,48 @@ router.post("/delete", async (req, res, next) => {
     } else return res.json({ success: false, message: "User not found" });
   } catch (error) {
     return res.json({ success: false, error: error.message });
+  }
+});
+
+// add user and their case/notifications
+router.post("/add", async (req, res, next) => {
+  const { name, surname, lng, lat, active, date } = req.body;
+
+  if (!lng || !lat)
+    return res.status(400).json({
+      success: false,
+      message: "Please, choose a location in the map first"
+    });
+
+  if (!name)
+    return res
+      .status(400)
+      .json({ success: false, message: "The user must have a name" });
+
+  try {
+    // add user
+    const [geocode] = await geocoder.reverse({ lat, lon: lng });
+    const newUser = await User.create({
+      username: new Date().getTime().toString(),
+      password: hashPassword(new Date().getTime().toString()),
+      name,
+      surname,
+      location: { coordinates: [lng, lat] },
+      geocode
+    });
+
+    // add case
+    if (active) {
+      const newCase = await Case.create({ user: newUser._id });
+      await addNearCase(newCase);
+      newCase.createdAt = new Date(date);
+      await newCase.save();
+      res.json({ success: true, case: newCase });
+    }
+
+    return res.json({ success: true, newUser });
+  } catch (e) {
+    next(e);
   }
 });
 

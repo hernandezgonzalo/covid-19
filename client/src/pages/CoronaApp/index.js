@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core";
 import { createBrowserHistory } from "history";
 import { useUser } from "../../services/authService";
 import Administrator from "./Administrator";
+import MapContextProvider from "../../contexts/MapContext";
 
 export const useStyles = makeStyles(() => ({
   mapWrapper: {
@@ -26,7 +27,8 @@ export const CoronaApp = withProtected(() => {
   const user = useUser();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries
+    libraries,
+    language: "en"
   });
 
   const isAdmin = user.role === "admin";
@@ -47,22 +49,24 @@ export const CoronaApp = withProtected(() => {
 
   return (
     <Grid container>
-      {isAdmin && <Administrator />}
-      <Grid item className={classes.mapWrapper}>
-        <Box
-          height={1}
-          width={1}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          {isLoaded ? (
-            <RenderMap {...{ mapOptions, caseToShow }} />
-          ) : (
-            <CircularProgress />
-          )}
-        </Box>
-      </Grid>
+      <MapContextProvider>
+        {isAdmin && <Administrator />}
+        <Grid item className={classes.mapWrapper}>
+          <Box
+            height={1}
+            width={1}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {isLoaded ? (
+              <RenderMap {...{ mapOptions, caseToShow }} />
+            ) : (
+              <CircularProgress />
+            )}
+          </Box>
+        </Grid>
+      </MapContextProvider>
     </Grid>
   );
 });
