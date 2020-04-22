@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React, { createRef, useContext } from "react";
 import { Grid, Avatar, Switch } from "@material-ui/core";
 import MaterialTable from "material-table";
 import {
@@ -6,17 +6,22 @@ import {
   findCase,
   activeUser,
   inactiveUser,
-  deleteUser
+  deleteUser,
+  addUser
 } from "../../../services/adminService";
 import { useStyles } from "./styles";
 import TimeAgo from "../../../components/ui/TimeAgo";
 import { useHistory } from "react-router-dom";
 import DateAndTimePicker from "./../../../components/ui/DateAndTimePicker";
+import { MapContext } from "../../../contexts/MapContext";
+import { NotifierContext } from "../../../contexts/NotifierContext";
 
 const Administrator = () => {
   const tableRef = createRef();
   const classes = useStyles();
   const history = useHistory();
+  const { mapPlace } = useContext(MapContext);
+  const { setFlash } = useContext(NotifierContext);
 
   const handleUpdateData = async query => {
     const { pageSize, page, search, orderBy, orderDirection } = query;
@@ -34,19 +39,6 @@ const Administrator = () => {
     }
   };
 
-  const options = {
-    style: { borderRadius: 0 },
-    localization: { header: { actions: "" } },
-    options: {
-      pageSize: 20,
-      pageSizeOptions: [],
-      showTitle: false,
-      actionsColumnIndex: 7,
-      draggable: false,
-      addRowPosition: "first"
-    }
-  };
-
   const handleOnRowClick = async (e, selectedRow) => {
     if (selectedRow.active) {
       const { caseToShow } = await findCase(selectedRow.case);
@@ -58,6 +50,36 @@ const Administrator = () => {
     if (rowData.active)
       inactiveUser(rowData.id).then(() => table.onQueryChange());
     else activeUser(rowData.id).then(() => table.onQueryChange());
+  };
+
+  const handleAddUser = async newData => {
+    try {
+      await addUser({
+        ...newData,
+        lat: mapPlace.latitude,
+        lng: mapPlace.longitude
+      });
+    } catch (error) {
+      setFlash({
+        type: "error",
+        message: error.response.data.message
+      });
+    } finally {
+      return;
+    }
+  };
+
+  const options = {
+    style: { borderRadius: 0 },
+    localization: { header: { actions: "" } },
+    options: {
+      pageSize: 20,
+      pageSizeOptions: [],
+      showTitle: false,
+      actionsColumnIndex: 7,
+      draggable: false,
+      addRowPosition: "first"
+    }
   };
 
   return (
@@ -102,7 +124,8 @@ const Administrator = () => {
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             customSort: a => a,
-            editable: "never"
+            editable: "never",
+            initialEditValue: mapPlace.city
           },
           {
             title: "Country",
@@ -110,7 +133,8 @@ const Administrator = () => {
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             customSort: a => a,
-            editable: "never"
+            editable: "never",
+            initialEditValue: mapPlace.country
           },
           {
             title: "Date",
@@ -155,14 +179,13 @@ const Administrator = () => {
         editable={{
           onRowAdd: newData =>
             new Promise(resolve => {
-              console.log(newData);
-              resolve();
+              handleAddUser(newData).then(() => resolve());
             }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
-              console.log(newData, oldData);
-              resolve();
-            }),
+          // onRowUpdate: (newData, oldData) =>
+          //   new Promise((resolve, reject) => {
+          //     console.log(newData, oldData);
+          //     resolve();
+          //   }),
           onRowDelete: oldData =>
             new Promise(resolve => {
               deleteUser(oldData.id).then(resolve());
