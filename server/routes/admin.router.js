@@ -62,9 +62,16 @@ router.post("/", async (req, res, next) => {
     ]);
 
     const count = await User.find({
-      $or: [
-        { name: { $regex: search, $options: "i" } },
-        { surname: { $regex: search, $options: "i" } }
+      $and: [
+        {
+          role: "user"
+        },
+        {
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { surname: { $regex: search, $options: "i" } }
+          ]
+        }
       ]
     }).countDocuments();
 
@@ -225,6 +232,7 @@ router.post(
       const editUser = await User.findById(userId);
       Object.assign(editUser, { image: req.file });
       await editUser.save();
+      io.sockets.emit("broadcast", "This is a broadcast to refresh the map");
       return res.json({ success: true, user: editUser.toJSON() });
     } catch (e) {
       next(e);

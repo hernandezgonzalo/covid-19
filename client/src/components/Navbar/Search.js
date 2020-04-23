@@ -9,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { DialogActions, Button, IconButton, Tooltip } from "@material-ui/core";
 
-export default function SearchDialog() {
+export default function SearchDialog({ children }) {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -26,15 +26,14 @@ export default function SearchDialog() {
 
   return (
     <div>
-      <Tooltip title="Find a country">
-        <IconButton
-          aria-label="Find a country"
-          color="inherit"
-          onClick={handleClickOpen}
-        >
-          <SearchIcon />
-        </IconButton>
-      </Tooltip>
+      <div onClick={handleClickOpen}>
+        <Tooltip title="Find a country">
+          <IconButton aria-label="Find a country" color="inherit">
+            <SearchIcon />
+          </IconButton>
+        </Tooltip>
+        {children}
+      </div>
       <Dialog
         open={open}
         onClose={handleClose}

@@ -4,7 +4,7 @@ import { makeStyles, Box, Typography } from "@material-ui/core";
 import TimeAgo from "./TimeAgo";
 import { kFormatter } from "../../lib/calc";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   flag: {
     marginRight: "0.25em",
     fontSize: 28,
@@ -26,10 +26,13 @@ const useStyles = makeStyles({
     },
     "& .number": {
       fontSize: "1.5rem"
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "auto"
     }
   },
   lastUpdate: { fontSize: ".8rem", opacity: ".6", margin: "0 0 auto auto" }
-});
+}));
 
 export const ScoreCountryName = ({ name, iso2, lastUpdate }) => {
   const classes = useStyles();
