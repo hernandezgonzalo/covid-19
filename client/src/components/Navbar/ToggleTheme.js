@@ -4,23 +4,22 @@ import Brightness4Icon from "@material-ui/icons/Brightness4";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import { Tooltip, useTheme } from "@material-ui/core";
 
-const ToggleTheme = ({ toggleTheme }) => {
+const ToggleTheme = ({ toggleTheme, children }) => {
   const theme = useTheme();
 
   return (
-    <Tooltip title="Toggle light/dark theme">
-      <IconButton
-        aria-label="Toggle light/dark theme"
-        onClick={toggleTheme}
-        color="inherit"
-      >
-        {theme.palette.type === "dark" ? (
-          <Brightness7Icon />
-        ) : (
-          <Brightness4Icon />
-        )}
-      </IconButton>
-    </Tooltip>
+    <div onClick={toggleTheme}>
+      <Tooltip title="Toggle light/dark theme">
+        <IconButton aria-label="Toggle light/dark theme" color="inherit">
+          {theme.palette.type === "dark" ? (
+            <Brightness7Icon />
+          ) : (
+            <Brightness4Icon />
+          )}
+        </IconButton>
+      </Tooltip>
+      {children}
+    </div>
   );
 };
 

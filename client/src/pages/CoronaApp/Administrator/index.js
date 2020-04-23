@@ -1,4 +1,4 @@
-import React, { createRef, useContext } from "react";
+import React, { createRef, useContext, useState } from "react";
 import { Grid, Avatar, Switch } from "@material-ui/core";
 import MaterialTable from "material-table";
 import {
@@ -15,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import DateAndTimePicker from "./../../../components/ui/DateAndTimePicker";
 import { MapContext } from "../../../contexts/MapContext";
 import { NotifierContext } from "../../../contexts/NotifierContext";
+import UploadPhoto from "../../../components/ui/UploadPhoto";
 
 const Administrator = () => {
   const tableRef = createRef();
@@ -22,6 +23,7 @@ const Administrator = () => {
   const history = useHistory();
   const { mapPlace } = useContext(MapContext);
   const { setFlash } = useContext(NotifierContext);
+  const [profilePic, setProfilePic] = useState();
 
   const handleUpdateData = async query => {
     const { pageSize, page, search, orderBy, orderDirection } = query;
@@ -54,16 +56,18 @@ const Administrator = () => {
 
   const handleAddUser = async newData => {
     try {
-      await addUser({
+      const { user } = await addUser({
         ...newData,
         lat: mapPlace.latitude,
-        lng: mapPlace.longitude
+        lng: mapPlace.longitude,
+        profilePic
+      });
+      setFlash({
+        type: "success",
+        message: `New user ${user.fullName} created`
       });
     } catch (error) {
-      setFlash({
-        type: "error",
-        message: error.response.data.message
-      });
+      setFlash({ type: "error", message: error.response.data.message });
     } finally {
       return;
     }
@@ -101,7 +105,9 @@ const Administrator = () => {
                 className={classes.image}
               />
             ),
-            editComponent: () => <Avatar className={classes.image} />
+            editComponent: () => (
+              <UploadPhoto {...{ profilePic, setProfilePic }} />
+            )
           },
           {
             title: "Name",
@@ -179,13 +185,11 @@ const Administrator = () => {
         editable={{
           onRowAdd: newData =>
             new Promise(resolve => {
-              handleAddUser(newData).then(() => resolve());
+              handleAddUser(newData).then(() => {
+                setProfilePic(null);
+                resolve();
+              });
             }),
-          // onRowUpdate: (newData, oldData) =>
-          //   new Promise((resolve, reject) => {
-          //     console.log(newData, oldData);
-          //     resolve();
-          //   }),
           onRowDelete: oldData =>
             new Promise(resolve => {
               deleteUser(oldData.id).then(resolve());
