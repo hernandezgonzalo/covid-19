@@ -7,6 +7,7 @@ const _ = require("lodash");
 const { addNearCase, removeNearCase } = require("../lib/notifyNearCase");
 const geocoder = require("../lib/geocoder");
 const { hashPassword } = require("../lib/hash");
+const uploadCloudinaryAvatar = require("../middlewares/uploadImage");
 
 const sortFieldMapper = {
   name: "name",
@@ -173,7 +174,7 @@ router.post("/delete", async (req, res, next) => {
 
 // add user and their case/notifications
 router.post("/add", async (req, res, next) => {
-  const { name, surname, lng, lat, active, date } = req.body;
+  const { name, surname, lng, lat, active, date, profilePic } = req.body;
 
   if (!lng || !lat)
     return res.status(400).json({
@@ -204,7 +205,7 @@ router.post("/add", async (req, res, next) => {
       await addNearCase(newCase);
       newCase.createdAt = new Date(date);
       await newCase.save();
-      res.json({ success: true, case: newCase });
+      // res.json({ success: true, case: newCase });
     }
 
     return res.json({ success: true, newUser });
@@ -212,5 +213,23 @@ router.post("/add", async (req, res, next) => {
     next(e);
   }
 });
+
+// upload profile image to Cloudinary and update user
+router.post(
+  "/image",
+  uploadCloudinaryAvatar.single("image"),
+  async (req, res, next) => {
+    const { userId } = req.body;
+    console.log(userId);
+    try {
+      const editUser = await User.findById(userId);
+      Object.assign(editUser, { image: req.file });
+      await editUser.save();
+      return res.json({ success: true, user: editUser.toJSON() });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 module.exports = router;
