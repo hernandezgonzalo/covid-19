@@ -62,7 +62,7 @@ export const addUser = async data => {
   try {
     const createUser = await api.post("/add", data);
 
-    // upload image to Cloudinary and appdend it to the new user
+    // upload image to Cloudinary and append it to the new user
     const formData = new FormData();
     formData.append("image", data.profilePic);
     formData.append("userId", createUser.data.newUser.id);
