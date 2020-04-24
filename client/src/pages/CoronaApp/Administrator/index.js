@@ -73,6 +73,20 @@ const Administrator = () => {
     }
   };
 
+  const handleDeleteUser = async oldData => {
+    try {
+      const { user } = await deleteUser(oldData.id);
+      setFlash({
+        type: "success",
+        message: `User ${user.fullName} deleted`
+      });
+    } catch (error) {
+      setFlash({ type: "error", message: error.response.data.message });
+    } finally {
+      return;
+    }
+  };
+
   const options = {
     style: { borderRadius: 0 },
     localization: { header: { actions: "" } },
@@ -192,7 +206,7 @@ const Administrator = () => {
             }),
           onRowDelete: oldData =>
             new Promise(resolve => {
-              deleteUser(oldData.id).then(resolve());
+              handleDeleteUser(oldData).then(resolve());
             })
         }}
         actions={[
