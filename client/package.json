@@ -28,10 +28,12 @@
     "react-scripts": "3.4.0",
     "react-swipeable-views": "^0.13.9",
     "react-time-ago": "^5.0.7",
+    "serve": "^11.3.0",
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "serve -s build",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

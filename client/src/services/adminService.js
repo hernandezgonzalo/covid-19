@@ -48,3 +48,28 @@ export const inactiveUser = async userId => {
     throw error;
   }
 };
+
+export const deleteUser = async userId => {
+  try {
+    const res = await api.post("/delete", { userId });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addUser = async data => {
+  try {
+    const createUser = await api.post("/add", data);
+
+    // upload image to Cloudinary and appdend it to the new user
+    const formData = new FormData();
+    formData.append("image", data.profilePic);
+    formData.append("userId", createUser.data.newUser.id);
+    const userWithPic = await api.post("/image", formData);
+
+    return userWithPic.data;
+  } catch (error) {
+    throw error;
+  }
+};

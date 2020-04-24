@@ -38,9 +38,7 @@ router.post("/user/add", checkRole("user"), async (req, res, next) => {
   try {
     const userCase = await Case.findOne({ user: user._id });
     if (!userCase) {
-      const newCase = await Case.create({
-        user: user._id
-      });
+      const newCase = await Case.create({ user: user._id });
       await addNearCase(newCase);
       const newCaseRes = await Case.findById(newCase._id).populate("user");
       res.json({ success: true, case: newCaseRes });

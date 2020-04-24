@@ -49,7 +49,10 @@ export const RenderMap = ({ mapOptions, caseToShow }) => {
         const findSelected = cases?.filter(c => c.id === caseToShow._id);
         setSelected(findSelected[0]);
       }
-    } else setInitialZoom(14);
+    } else {
+      if (isAdmin) setInitialZoom(6);
+      else setInitialZoom(14);
+    }
     // eslint-disable-next-line
   }, [caseToShow]);
 

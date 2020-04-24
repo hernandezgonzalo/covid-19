@@ -1,20 +1,29 @@
-import React, { createRef } from "react";
+import React, { createRef, useContext, useState } from "react";
 import { Grid, Avatar, Switch } from "@material-ui/core";
 import MaterialTable from "material-table";
 import {
   searchUsers,
   findCase,
   activeUser,
-  inactiveUser
+  inactiveUser,
+  deleteUser,
+  addUser
 } from "../../../services/adminService";
 import { useStyles } from "./styles";
 import TimeAgo from "../../../components/ui/TimeAgo";
 import { useHistory } from "react-router-dom";
+import DateAndTimePicker from "./../../../components/ui/DateAndTimePicker";
+import { MapContext } from "../../../contexts/MapContext";
+import { NotifierContext } from "../../../contexts/NotifierContext";
+import UploadPhoto from "../../../components/ui/UploadPhoto";
 
 const Administrator = () => {
   const tableRef = createRef();
   const classes = useStyles();
   const history = useHistory();
+  const { mapPlace } = useContext(MapContext);
+  const { setFlash } = useContext(NotifierContext);
+  const [profilePic, setProfilePic] = useState();
 
   const handleUpdateData = async query => {
     const { pageSize, page, search, orderBy, orderDirection } = query;
@@ -32,19 +41,6 @@ const Administrator = () => {
     }
   };
 
-  const options = {
-    style: { borderRadius: 0 },
-    localization: { header: { actions: "" } },
-    options: {
-      pageSize: 20,
-      pageSizeOptions: [],
-      showTitle: false,
-      actionsColumnIndex: 7,
-      draggable: false,
-      addRowPosition: "first"
-    }
-  };
-
   const handleOnRowClick = async (e, selectedRow) => {
     if (selectedRow.active) {
       const { caseToShow } = await findCase(selectedRow.case);
@@ -56,6 +52,38 @@ const Administrator = () => {
     if (rowData.active)
       inactiveUser(rowData.id).then(() => table.onQueryChange());
     else activeUser(rowData.id).then(() => table.onQueryChange());
+  };
+
+  const handleAddUser = async newData => {
+    try {
+      const { user } = await addUser({
+        ...newData,
+        lat: mapPlace.latitude,
+        lng: mapPlace.longitude,
+        profilePic
+      });
+      setFlash({
+        type: "success",
+        message: `New user ${user.fullName} created`
+      });
+    } catch (error) {
+      setFlash({ type: "error", message: error.response.data.message });
+    } finally {
+      return;
+    }
+  };
+
+  const options = {
+    style: { borderRadius: 0 },
+    localization: { header: { actions: "" } },
+    options: {
+      pageSize: 20,
+      pageSizeOptions: [],
+      showTitle: false,
+      actionsColumnIndex: 7,
+      draggable: false,
+      addRowPosition: "first"
+    }
   };
 
   return (
@@ -77,7 +105,9 @@ const Administrator = () => {
                 className={classes.image}
               />
             ),
-            editComponent: () => <Avatar className={classes.image} />
+            editComponent: () => (
+              <UploadPhoto {...{ profilePic, setProfilePic }} />
+            )
           },
           {
             title: "Name",
@@ -99,14 +129,18 @@ const Administrator = () => {
             field: "city",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
-            customSort: a => a
+            customSort: a => a,
+            editable: "never",
+            initialEditValue: mapPlace.city
           },
           {
             title: "Country",
             field: "country",
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
-            customSort: a => a
+            customSort: a => a,
+            editable: "never",
+            initialEditValue: mapPlace.country
           },
           {
             title: "Date",
@@ -114,7 +148,8 @@ const Administrator = () => {
             headerStyle: { padding: 5 },
             cellStyle: { padding: 5 },
             render: rowData =>
-              rowData.active && <TimeAgo date={new Date(rowData.date)} />
+              rowData.active && <TimeAgo date={new Date(rowData.date)} />,
+            editComponent: editProps => <DateAndTimePicker {...{ editProps }} />
           },
           {
             title: "Active",
@@ -127,6 +162,12 @@ const Administrator = () => {
                 onChange={() => handleChangeActive(rowData, tableRef.current)}
                 onClick={e => e.stopPropagation()}
               />
+            ),
+            editComponent: props => (
+              <Switch
+                onChange={() => props.onChange(!props.value)}
+                checked={!!props.value}
+              ></Switch>
             )
           }
         ]}
@@ -144,18 +185,14 @@ const Administrator = () => {
         editable={{
           onRowAdd: newData =>
             new Promise(resolve => {
-              console.log(newData);
-              resolve();
-            }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
-              console.log(newData, oldData);
-              resolve();
+              handleAddUser(newData).then(() => {
+                setProfilePic(null);
+                resolve();
+              });
             }),
           onRowDelete: oldData =>
             new Promise(resolve => {
-              console.log(oldData);
-              resolve();
+              deleteUser(oldData.id).then(resolve());
             })
         }}
         actions={[

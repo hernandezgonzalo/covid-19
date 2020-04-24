@@ -86,6 +86,29 @@ export const Navbar = ({ toggleTheme }) => {
     setOpenLogin(true);
   };
 
+  const NotificationsRef = React.forwardRef((props, ref) => (
+    <List dense ref={ref} style={{ padding: 0 }}>
+      {props.children}
+    </List>
+  ));
+
+  const notificationsId = "notifications-menu";
+  const renderNotifications = (
+    <Menu
+      anchorEl={notificationsEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={notificationsId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isNotificationsOpen}
+      onClose={handleMenuClose}
+    >
+      <NotificationsRef>
+        <Notifications {...{ notifications, handleMenuClose }} />
+      </NotificationsRef>
+    </Menu>
+  );
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -138,14 +161,6 @@ export const Navbar = ({ toggleTheme }) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show notifications" color="inherit">
-          <Badge badgeContent={notifications?.length} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -153,33 +168,43 @@ export const Navbar = ({ toggleTheme }) => {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          {userImage ? <UserAvatar /> : <AccountCircle />}
         </IconButton>
-        <p>Profile</p>
+        <span>Profile</span>
       </MenuItem>
-    </Menu>
-  );
-
-  const NotificationsRef = React.forwardRef((props, ref) => (
-    <List dense ref={ref} style={{ padding: 0 }}>
-      {props.children}
-    </List>
-  ));
-
-  const notificationsId = "notifications-menu";
-  const renderNotifications = (
-    <Menu
-      anchorEl={notificationsEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={notificationsId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isNotificationsOpen}
-      onClose={handleMenuClose}
-    >
-      <NotificationsRef>
-        <Notifications {...{ notifications, handleMenuClose }} />
-      </NotificationsRef>
+      {user && (
+        <MenuItem
+          aria-controls={notificationsId}
+          aria-haspopup="true"
+          onClick={handleNotificationsOpen}
+        >
+          <IconButton aria-label="show notifications" color="inherit">
+            <Badge
+              badgeContent={notifications?.filter(n => !n.read).length}
+              color="secondary"
+            >
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          <span>Notifications</span>
+        </MenuItem>
+      )}
+      <MenuItem>
+        <ToggleTheme theme={theme} toggleTheme={toggleTheme}>
+          <span>Toggle theme</span>
+        </ToggleTheme>
+      </MenuItem>
+      <MenuItem>
+        <SearchDialog>
+          <span>Find a country</span>
+        </SearchDialog>
+      </MenuItem>
+      <MenuItem onClick={() => history.push("/app")}>
+        <IconButton aria-label="Corona App" color="inherit">
+          <Icon className="fas fa-virus" />
+        </IconButton>
+        <span>Conora App</span>
+      </MenuItem>
     </Menu>
   );
 

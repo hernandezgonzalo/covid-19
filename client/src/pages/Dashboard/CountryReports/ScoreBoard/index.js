@@ -1,8 +1,19 @@
 import React from "react";
 import { ScoreData, ScoreCountryName } from "../../../../components/ui/Score";
-import { Paper, Box } from "@material-ui/core";
+import { Paper, Box, makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles(theme => ({
+  boxScoreData: {
+    flexWrap: "nowrap",
+    [theme.breakpoints.down("xs")]: {
+      flexWrap: "wrap"
+    }
+  }
+}));
 
 const ScoreBoard = ({ currentView }) => {
+  const classes = useStyles();
+
   return (
     <Box component={Paper} variant="outlined" square px={1.5} py={0.5}>
       <Box>
@@ -12,7 +23,7 @@ const ScoreBoard = ({ currentView }) => {
           lastUpdate={currentView.lastUpdate}
         />
       </Box>
-      <Box display="flex">
+      <Box display="flex" className={classes.boxScoreData}>
         <ScoreData title="Cases" data={currentView.confirmed} />
         <ScoreData
           title="Active"

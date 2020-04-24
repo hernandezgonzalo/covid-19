@@ -2,8 +2,12 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Case = require("../models/Case");
+const Notification = require("../models/Notification");
 const _ = require("lodash");
 const { addNearCase, removeNearCase } = require("../lib/notifyNearCase");
+const geocoder = require("../lib/geocoder");
+const { hashPassword } = require("../lib/hash");
+const uploadCloudinaryAvatar = require("../middlewares/uploadImage");
 
 const sortFieldMapper = {
   name: "name",
@@ -58,9 +62,16 @@ router.post("/", async (req, res, next) => {
     ]);
 
     const count = await User.find({
-      $or: [
-        { name: { $regex: search, $options: "i" } },
-        { surname: { $regex: search, $options: "i" } }
+      $and: [
+        {
+          role: "user"
+        },
+        {
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { surname: { $regex: search, $options: "i" } }
+          ]
+        }
       ]
     }).countDocuments();
 
@@ -139,13 +150,94 @@ router.post("/inactive", async (req, res, next) => {
       await removeNearCase(removedCase);
       return res.json({ success: true, case: removedCase });
     } else
-      res.json({
+      return res.json({
         success: false,
         message: "This user doesn't have a positive case registered"
       });
   } catch (error) {
-    res.json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 });
+
+// delete user and their case/notifications
+router.post("/delete", async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const userCase = await Case.findOne({ user: userId });
+    if (userCase) userCase.remove();
+
+    await Notification.deleteMany({ user: userId });
+    await removeNearCase(userCase);
+
+    const user = await User.findById(userId);
+    if (user) {
+      await user.remove();
+      return res.json({ success: true, user });
+    } else return res.json({ success: false, message: "User not found" });
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
+  }
+});
+
+// add user and their case/notifications
+router.post("/add", async (req, res, next) => {
+  const { name, surname, lng, lat, active, date, profilePic } = req.body;
+
+  if (!lng || !lat)
+    return res.status(400).json({
+      success: false,
+      message: "Please, choose a location in the map first"
+    });
+
+  if (!name)
+    return res
+      .status(400)
+      .json({ success: false, message: "The user must have a name" });
+
+  try {
+    // add user
+    const [geocode] = await geocoder.reverse({ lat, lon: lng });
+    const newUser = await User.create({
+      username: new Date().getTime().toString(),
+      password: hashPassword(new Date().getTime().toString()),
+      name,
+      surname,
+      location: { coordinates: [lng, lat] },
+      geocode
+    });
+
+    // add case
+    if (active) {
+      const newCase = await Case.create({ user: newUser._id });
+      await addNearCase(newCase);
+      newCase.createdAt = new Date(date);
+      await newCase.save();
+      // res.json({ success: true, case: newCase });
+    }
+
+    return res.json({ success: true, newUser });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// upload profile image to Cloudinary and update user
+router.post(
+  "/image",
+  uploadCloudinaryAvatar.single("image"),
+  async (req, res, next) => {
+    const { userId } = req.body;
+    console.log(userId);
+    try {
+      const editUser = await User.findById(userId);
+      Object.assign(editUser, { image: req.file });
+      await editUser.save();
+      io.sockets.emit("broadcast", "This is a broadcast to refresh the map");
+      return res.json({ success: true, user: editUser.toJSON() });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 module.exports = router;
