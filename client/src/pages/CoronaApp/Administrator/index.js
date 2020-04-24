@@ -206,7 +206,10 @@ const Administrator = () => {
             }),
           onRowDelete: oldData =>
             new Promise(resolve => {
-              handleDeleteUser(oldData).then(resolve());
+              handleDeleteUser(oldData).then(() => {
+                setProfilePic(null);
+                resolve();
+              });
             })
         }}
         actions={[
