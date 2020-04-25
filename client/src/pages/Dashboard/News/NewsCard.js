@@ -9,11 +9,11 @@ import TimeAgo from "../../../components/ui/TimeAgo";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    maxWidth: 345
   },
   title: { fontSize: "1rem", lineHeight: "1.2rem" },
   snippet: { lineHeight: "1.2rem", marginBottom: ".5em" },
-  footer: { fontSize: ".8rem", opacity: ".6" },
+  footer: { fontSize: ".8rem", opacity: ".6" }
 });
 
 export default function NewsCard({
@@ -22,19 +22,21 @@ export default function NewsCard({
   description,
   url,
   urlToImage,
-  publishedAt,
+  publishedAt
 }) {
   const classes = useStyles();
 
   return (
     <Card className={classes.root} square>
       <CardActionArea onClick={() => window.open(url)}>
-        <CardMedia
-          component="img"
-          alt={title}
-          height="140"
-          image={urlToImage}
-        />
+        {urlToImage && (
+          <CardMedia
+            component="img"
+            alt={title}
+            height="140"
+            image={urlToImage}
+          />
+        )}
         <CardContent>
           <Typography
             gutterBottom
