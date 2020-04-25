@@ -2,9 +2,11 @@
 
 > An application to keep track of coronavirus cases
 
+Live version: https://pandemic19.herokuapp.com
+
 ![screencapture-pandemic19-herokuapp-com-1587728671059](https://user-images.githubusercontent.com/54455748/80210468-1cedf680-8634-11ea-8ff9-b54dc0fa46d4.png)
 
-Its objective is to present the data collected from the covid19.mathdro.id/api API using statistics, graphs and a heat map, as well as news about coronavirus from different media.
+Its objective is to present the data collected from the [covid19.mathdro.id/api](https://covid19.mathdro.id/api) API using statistics, graphs and a heat map, as well as news about coronavirus from different media.
 
 ![screencapture-pandemic19-herokuapp-com-app-1587728849338](https://user-images.githubusercontent.com/54455748/80210551-3c851f00-8634-11ea-9343-dfd2e1371f3a.png)
 
@@ -37,7 +39,7 @@ This is my final project to be made during the Ironhack Web Development Bootcamp
 
 ## Contributing
 
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/hernandezgonzalo/covid-19/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
 
