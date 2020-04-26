@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { ScoreCountryName, ScoreData } from "../../../components/ui/Score";
+import { scrollCountryReports } from "../../../lib/layout";
 
 const useStyles = makeStyles(theme => ({
   tableRow: {
@@ -29,7 +30,10 @@ const UpdatedListItem = ({ country }) => {
       <TableCell
         component="th"
         scope="row"
-        onClick={() => history.push(country.url)}
+        onClick={() => {
+          history.push(country.url);
+          scrollCountryReports();
+        }}
         className={classes.tableRow}
       >
         <ScoreCountryName name={country.countryRegion} iso2={country.iso2} />

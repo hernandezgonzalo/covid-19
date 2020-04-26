@@ -15,6 +15,19 @@ import RoomIcon from "@material-ui/icons/Room";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import BarChartIcon from "@material-ui/icons/BarChart";
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    width: "100%",
+    height: "100%"
+  },
+  labelIcon: {
+    minHeight: 0,
+    lineHeight: "1em",
+    "& svg": { marginRight: 5 }
+  }
+}));
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -49,18 +62,6 @@ function a11yProps(index) {
     "aria-controls": `full-width-tabpanel-${index}`
   };
 }
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: "100%",
-    height: "100%"
-  },
-  labelIcon: {
-    minHeight: 0,
-    "& svg": { marginRight: 5 }
-  }
-}));
 
 export default function CountryReportsTabs({ currentView }) {
   const classes = useStyles();

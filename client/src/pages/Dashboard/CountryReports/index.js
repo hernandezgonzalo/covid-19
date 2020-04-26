@@ -8,9 +8,7 @@ import CountryReportsTabs from "./CountryReportsTabs";
 
 const useStyles = makeStyles(theme => ({
   boxWrapper: {
-    [theme.breakpoints.down("sm")]: {
-      padding: "0 8px"
-    }
+    [theme.breakpoints.down("sm")]: { padding: "0 8px" }
   },
   componentsWrapper: { height: "calc(100vh - 80px)" },
   reportsWrapper: { height: "calc(100% - 104px)" }
@@ -44,7 +42,7 @@ const CountryReports = props => {
     );
 
   return (
-    <Grid item xs={12} md={9} lg={7}>
+    <Grid id="country-reports" item xs={12} md={9} lg={7}>
       <Box pt={1} className={classes.boxWrapper}>
         <Box className={classes.componentsWrapper}>
           <ScoreBoard {...{ currentView }} />
