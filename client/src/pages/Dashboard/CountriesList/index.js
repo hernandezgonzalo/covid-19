@@ -18,7 +18,8 @@ const useStyles = makeStyles(theme => ({
   listWrapper: {
     height: "calc(100vh - 80px)",
     [theme.breakpoints.down("sm")]: {
-      height: "100%"
+      height: "auto",
+      overflowX: "unset"
     }
   }
 }));

@@ -106,7 +106,7 @@ export default function SignUp() {
             }
           />
           <Grid container spacing={1}>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <TextField
                 required
                 id="name"
@@ -117,7 +117,7 @@ export default function SignUp() {
                 error={!!errors.name}
               />
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <TextField
                 id="surname"
                 label="Surname"

@@ -51,11 +51,11 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.enable("trust proxy");
 app.use(
   session({
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 365
-    },
+    proxy: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 },
     secret: "we're all gonna die",
     resave: true,
     saveUninitialized: true,
