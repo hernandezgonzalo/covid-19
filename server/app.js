@@ -53,7 +53,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   session({
-    maxAge: 1000 * 60 * 60 * 24 * 365,
+    cookie: { httpOnly: false, secure: true },
     secret: "we're all gonna die",
     resave: true,
     saveUninitialized: true,
