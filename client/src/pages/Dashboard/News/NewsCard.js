@@ -9,7 +9,7 @@ import TimeAgo from "../../../components/ui/TimeAgo";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345
+    // maxWidth: 345
   },
   title: { fontSize: "1rem", lineHeight: "1.2rem" },
   snippet: { lineHeight: "1.2rem", marginBottom: ".5em" },

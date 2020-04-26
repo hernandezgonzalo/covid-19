@@ -101,7 +101,7 @@ const Administrator = () => {
   };
 
   return (
-    <Grid item lg={6} className={classes.tableWrapper}>
+    <Grid item sm={6} className={classes.tableWrapper}>
       <MaterialTable
         tableRef={tableRef}
         {...options}

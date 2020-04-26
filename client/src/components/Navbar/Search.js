@@ -8,6 +8,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { DialogActions, Button, IconButton, Tooltip } from "@material-ui/core";
+import { scrollCountryReports } from "../../lib/layout";
 
 export default function SearchDialog({ children }) {
   const [open, setOpen] = useState(false);
@@ -45,12 +46,15 @@ export default function SearchDialog({ children }) {
             id="combo-box"
             options={countriesOrdered}
             getOptionLabel={option => option.countryRegion}
-            style={{ width: 300 }}
+            style={{ width: 280 }}
             renderInput={params => (
               <TextField autoFocus {...params} label="Type something" />
             )}
             onChange={(e, value) => {
-              if (value) history.push(`/${value.url}`);
+              if (value) {
+                history.push(`/${value.url}`);
+                scrollCountryReports();
+              }
               setOpen(false);
             }}
           />
