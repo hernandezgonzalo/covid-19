@@ -1,6 +1,8 @@
+import { parse } from "date-fns";
+
 export const datesBetween = dates => {
-  const start = new Date(dates[0]), // MM-DD-YYYY
-    end = new Date(dates[1]),
+  const start = parse(dates[0], "MM-dd-yyyy", new Date()),
+    end = parse(dates[1], "MM-dd-yyyy", new Date()),
     year = start.getFullYear(),
     month = start.getMonth();
   let day = start.getDate(),
