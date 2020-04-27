@@ -60,7 +60,7 @@ export const upload = async file => {
 };
 
 export const login = async ({ username, password }) => {
-  const res = await api.post("/auth/login", {
+  const res = await api.post("/auth/login/", {
     username,
     password
   });
@@ -73,6 +73,6 @@ export const logout = async () => {
 };
 
 export const loggedin = async () => {
-  const res = await api.get("/auth/loggedin");
+  const res = await api.get("/auth/loggedin/");
   return res.data;
 };
