@@ -53,7 +53,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   session({
-    cookie: { sameSite: "none", secure: true },
     secret: "we're all gonna die",
     resave: true,
     saveUninitialized: true,
@@ -62,6 +61,16 @@ app.use(
     })
   })
 );
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", process.env.CLIENT);
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 require("./passport")(app);
 
