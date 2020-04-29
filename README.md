@@ -43,4 +43,4 @@ Please read [CONTRIBUTING.md](https://github.com/hernandezgonzalo/covid-19/blob/
 
 ## Authors
 
-* [Gonzalo Hernández](https://github.com/hernandezgonzalo)
+* Gonzalo Hernández - [LinkedIn](https://www.linkedin.com/in/ghgarcia/)

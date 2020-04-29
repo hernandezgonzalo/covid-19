@@ -66,7 +66,6 @@ require("./passport")(app);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const index = require("./routes/index");
-app.use("/", index);
+app.use("/", require("./routes/index"));
 
 module.exports = app;

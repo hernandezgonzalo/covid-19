@@ -1,11 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const { hashPassword } = require("../lib/hash");
+
+const EMAIL_PATTERN = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    email: { type: String },
+    email: {
+      type: String,
+      match: [EMAIL_PATTERN, "Please fill a valid email address"],
+      lowercase: true
+    },
     name: { type: String, required: true },
     surname: { type: String },
     image: { type: Object },
@@ -28,6 +35,13 @@ const userSchema = new Schema(
     collation: { locale: "es" }
   }
 );
+
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (!user.isModified("password")) return next();
+  user.password = await hashPassword(user.password);
+  next();
+});
 
 userSchema.virtual("fullName").get(function () {
   let fullName = this.name;

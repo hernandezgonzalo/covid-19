@@ -18,6 +18,8 @@ import { Box, CircularProgress } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { useStyles } from "./styles";
 
+const EMAIL_PATTERN = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
 export default function SignUp() {
   const history = useHistory();
   const setUser = useUserSetter();
@@ -132,9 +134,7 @@ export default function SignUp() {
             label="Email Address"
             name="email"
             {...inputStyle}
-            inputRef={register({
-              pattern: /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+.)+[^<>()[\].,;:\s@"]{2,})$/i
-            })}
+            inputRef={register({ pattern: EMAIL_PATTERN })}
             error={!!errors.email}
           />
           <Box mt={1}>

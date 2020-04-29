@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const passport = require("passport");
-const { hashPassword } = require("../lib/hash");
 const { isLoggedOut, isLoggedIn } = require("../middlewares/isLogged");
 const geocoder = require("../lib/geocoder");
 
@@ -32,7 +31,7 @@ router.post("/signup", isLoggedOut(), async (req, res, next) => {
       const [geocode] = await geocoder.reverse({ lat, lon: lng });
       const newUser = await User.create({
         username,
-        password: hashPassword(password),
+        password,
         email,
         name,
         surname,
