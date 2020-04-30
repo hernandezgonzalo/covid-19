@@ -7,19 +7,14 @@ router.get("/", (req, res, next) => {
   res.json({ success: true, message: "Welcome" });
 });
 
-const authRouter = require("./auth.router");
-router.use("/auth", authRouter);
+router.use("/auth", require("./auth.router"));
 
-const profileRouter = require("./profile.router");
-router.use("/profile", profileRouter);
+router.use("/profile", require("./profile.router"));
 
-const appRouter = require("./app.router");
-router.use("/app", isLoggedIn(), appRouter);
+router.use("/app", isLoggedIn(), require("./app.router"));
 
-const adminRouter = require("./admin.router");
-router.use("/admin", checkRole("admin"), adminRouter);
+router.use("/admin", checkRole("admin"), require("./admin.router"));
 
-const notificationsRouter = require("./notifications.router");
-router.use("/notifications", isLoggedIn(), notificationsRouter);
+router.use("/notifications", isLoggedIn(), require("./notifications.router"));
 
 module.exports = router;
