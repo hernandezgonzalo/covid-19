@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { hashPassword } = require("../lib/hash");
+const { hashPassword, checkHashed } = require("../lib/hash");
 
 const EMAIL_PATTERN = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
-const userSchema = new Schema(
+const UserSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -36,29 +36,33 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.pre("save", async function (next) {
+UserSchema.pre("save", async function (next) {
   const user = this;
   if (!user.isModified("password")) return next();
   user.password = await hashPassword(user.password);
   next();
 });
 
-userSchema.virtual("fullName").get(function () {
+UserSchema.virtual("fullName").get(function () {
   let fullName = this.name;
   if (this.surname) fullName += ` ${this.surname}`;
   return fullName;
 });
 
-userSchema.methods.toJSON = function () {
+UserSchema.methods.toJSON = function () {
   var obj = this.toObject({ virtuals: true });
   delete obj.password;
   delete obj.__v;
   return obj;
 };
 
-userSchema.set("toObject", { virtuals: true });
+UserSchema.methods.isPasswordOk = function (password) {
+  return checkHashed(password, this.password);
+};
 
-const schemaWithIndex = userSchema.index({ location: "2dsphere" });
+UserSchema.set("toObject", { virtuals: true });
 
-const User = mongoose.model("User", schemaWithIndex);
+const SchemaWithIndex = UserSchema.index({ location: "2dsphere" });
+
+const User = mongoose.model("User", SchemaWithIndex);
 module.exports = User;

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const caseSchema = new Schema(
+const CaseSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -15,4 +15,4 @@ const caseSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Case", caseSchema);
+module.exports = mongoose.model("Case", CaseSchema);
