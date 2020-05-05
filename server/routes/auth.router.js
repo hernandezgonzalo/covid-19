@@ -2,21 +2,29 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const passport = require("passport");
-const { isLoggedOut, isLoggedIn } = require("../middlewares/isLogged");
+const { ensureAuthenticated } = require("../middlewares/isLogged");
 const geocoder = require("../lib/geocoder");
+const { issueToken } = require("../lib/token");
 
-router.post("/login", isLoggedOut(), function (req, res, next) {
-  passport.authenticate("local", function (err, user, info) {
+router.post("/login", function (req, res, next) {
+  passport.authenticate("local", { session: false }, function (
+    err,
+    user,
+    info
+  ) {
     if (err) return res.status(401).json(err);
     if (!user) return res.status(401).json(info);
+
     req.logIn(user, function (err) {
       if (err) return res.status(401).json(err);
-      return res.json({ success: true, user: req.user.toJSON() });
     });
+
+    const token = issueToken(user);
+    return res.json({ success: true, token });
   })(req, res, next);
 });
 
-router.post("/signup", isLoggedOut(), async (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
   const { username, password, name, surname, email, location } = req.body;
   const { lng, lat } = location;
   if (!username || !password) {
@@ -39,19 +47,8 @@ router.post("/signup", isLoggedOut(), async (req, res, next) => {
         geocode
       });
 
-      // login with the user created
-      req.login(newUser, function (err) {
-        if (!err) {
-          return res
-            .status(201)
-            .json({ success: true, user: req.user.toJSON() });
-        } else {
-          return res.status(401).json({
-            status: "error",
-            message: `Error trying to login with the new user`
-          });
-        }
-      });
+      const token = issueToken(newUser);
+      return res.json({ success: true, token, user: newUser.toJSON() });
     } else {
       return res
         .status(401)
@@ -62,18 +59,18 @@ router.post("/signup", isLoggedOut(), async (req, res, next) => {
   }
 });
 
-router.get("/logout", isLoggedIn(), (req, res, next) => {
-  req.logout();
-  return res.json({ success: true, message: "Logged out" });
-});
+// router.get("/logout", ensureAuthenticated, (req, res, next) => {
+//   req.logout();
+//   return res.json({ success: true, message: "Logged out" });
+// });
 
-router.get("/loggedin", (req, res, next) => {
-  if (req.isAuthenticated())
-    return res.json({ success: true, user: req.user.toJSON() });
-  else
-    return res
-      .status(401)
-      .json({ success: false, message: "No user session present" });
+router.get("/loggedin", ensureAuthenticated, (req, res, next) => {
+  // if (req.isAuthenticated())
+  return res.json({ success: true, user: req.user.toJSON() });
+  // else
+  //   return res
+  //     .status(401)
+  //     .json({ success: false, message: "No user session present" });
 });
 
 module.exports = router;

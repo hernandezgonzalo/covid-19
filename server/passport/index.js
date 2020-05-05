@@ -2,6 +2,7 @@ const passport = require("passport");
 const User = require("../models/User");
 
 require("./strategies/local.strategy");
+require("./strategies/jwt.strategy");
 
 passport.serializeUser((user, cb) => {
   cb(null, user._id);

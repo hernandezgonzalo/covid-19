@@ -34,7 +34,7 @@ const createUsers = async users => {
       const existUser = await User.findOne({ username });
       if (!existUser) {
         const points = randomPointsOnPolygon(1, spain);
-        const salt = bcrypt.genSaltSync(10);
+        const salt = bcrypt.genSaltSync(parseInt(process.env.BCRYPT_ROUNDS));
         const password = bcrypt.hashSync(user.password, salt);
         const [lon, lat] = points[0].geometry.coordinates;
         const [geocode] = await geocoder.reverse({ lat, lon });

@@ -50,17 +50,17 @@ app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(
-  session({
-    secret: "we're all gonna die",
-    resave: true,
-    saveUninitialized: true,
-    store: new MongoStore({
-      mongooseConnection: mongoose.connection
-    })
-  })
-);
+// app.use(cookieParser());
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: true,
+//     saveUninitialized: true,
+//     store: new MongoStore({
+//       mongooseConnection: mongoose.connection
+//     })
+//   })
+// );
 
 require("./passport")(app);
 
