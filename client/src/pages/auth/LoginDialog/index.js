@@ -55,13 +55,13 @@ const LoginForm = ({ handleClose }) => {
 
   const onSubmit = data => {
     login(data)
-      .then(res => {
-        setUser(res.user);
+      .then(user => {
+        setUser(user);
         handleClose();
         if (location.pathname === "/auth/signup") history.push("/");
         setFlash({
           type: "success",
-          message: `Welcome back, ${res.user.name}`
+          message: `Welcome back, ${user.name}`
         });
       })
       .catch(error =>

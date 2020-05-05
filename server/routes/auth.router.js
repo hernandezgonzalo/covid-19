@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const passport = require("passport");
-const { ensureAuthenticated } = require("../middlewares/isLogged");
+const { ensureAuthenticated } = require("../middlewares/authentication");
 const geocoder = require("../lib/geocoder");
 const { issueToken } = require("../lib/token");
 
@@ -15,12 +15,12 @@ router.post("/login", function (req, res, next) {
     if (err) return res.status(401).json(err);
     if (!user) return res.status(401).json(info);
 
-    req.logIn(user, function (err) {
-      if (err) return res.status(401).json(err);
-    });
+    // req.logIn(user, function (err) {
+    //   if (err) return res.status(401).json(err);
+    // });
 
     const token = issueToken(user);
-    return res.json({ success: true, token });
+    return res.json({ success: true, token, user });
   })(req, res, next);
 });
 
@@ -65,12 +65,7 @@ router.post("/signup", async (req, res, next) => {
 // });
 
 router.get("/loggedin", ensureAuthenticated, (req, res, next) => {
-  // if (req.isAuthenticated())
-  return res.json({ success: true, user: req.user.toJSON() });
-  // else
-  //   return res
-  //     .status(401)
-  //     .json({ success: false, message: "No user session present" });
+  return res.json({ success: true, user: req.user });
 });
 
 module.exports = router;
