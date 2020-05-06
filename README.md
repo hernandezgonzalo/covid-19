@@ -32,10 +32,11 @@ In order to run this project locally do the following (on both client and server
 * [Express.js](https://expressjs.com/) as the foundation to build the app's backend
 * [Mongoose.js](https://mongoosejs.com/) and [MongoDB](https://www.mongodb.com/) to handle platform models and database
 * [Socket.IO](https://socket.io/) to provide a real-time, bidirectional and event-based communication
+* [JSON Web Tokens](https://jwt.io/) to perform authentication in the application
 
 ## Overview
 
-This is my final project to be made during the Ironhack Web Development Bootcamp. It is a full-stack web application developed in Javascript. Some of the technologies and frameworks used in the development of the application are **React**, **Node.js**, **Express**, **Mongoose**, **AJAX**, **Passport**, **WebSocket** and **Material-UI**.
+This is my final project to be made during the Ironhack Web Development Bootcamp. It is a full-stack web application developed in Javascript. Some of the technologies and frameworks used in the development of the application are **React**, **Node.js**, **Express**, **Mongoose**, **AJAX**, **Passport**, **JWT**, **WebSocket** and **Material-UI**.
 
 ## Contributing
 

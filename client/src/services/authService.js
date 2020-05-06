@@ -28,8 +28,13 @@ export const useUserLogout = () => {
 };
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_SERVER,
-  withCredentials: true
+  baseURL: process.env.REACT_APP_SERVER
+});
+
+api.interceptors.request.use(function (config) {
+  const token = localStorage.getItem("authToken");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 export const signup = async ({
@@ -41,7 +46,9 @@ export const signup = async ({
   profilePic
 }) => {
   const location = await getLocation();
-  await api.post("/auth/signup", {
+  const {
+    data: { token, user }
+  } = await api.post("/auth/signup", {
     username,
     password,
     name,
@@ -49,30 +56,35 @@ export const signup = async ({
     email,
     location
   });
-  return await upload(profilePic[0]);
+  localStorage.setItem("authToken", token);
+  if (!profilePic[0]) return user;
+  else return await upload(profilePic[0]);
 };
 
+// upload the image to Cloudinary and update the user document
 export const upload = async file => {
   const data = new FormData();
   data.append("image", file);
   const res = await api.post("/profile/image", data);
-  return res.data;
+  return res.data.user;
 };
 
 export const login = async ({ username, password }) => {
-  const res = await api.post("/auth/login", {
+  const {
+    data: { user, token }
+  } = await api.post("/auth/login", {
     username,
     password
   });
-  return res.data;
+  localStorage.setItem("authToken", token);
+  return user;
 };
 
 export const logout = async () => {
-  const res = await api.get("/auth/logout");
-  return res.data;
+  localStorage.removeItem("authToken");
 };
 
 export const loggedin = async () => {
   const res = await api.get("/auth/loggedin");
-  return res.data;
+  return res.data.user;
 };

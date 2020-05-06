@@ -33,12 +33,12 @@ export default function SignUp() {
   const onSubmit = async data => {
     setIsUploading(true);
     signup(data)
-      .then(res => {
-        setUser(res.user);
+      .then(user => {
+        setUser(user);
         history.push("/");
         setFlash({
           type: "success",
-          message: `Welcome, ${res.user.name}`
+          message: `Welcome, ${user.name}`
         });
       })
       .catch(error => {
