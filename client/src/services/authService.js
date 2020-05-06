@@ -47,7 +47,7 @@ export const signup = async ({
 }) => {
   const location = await getLocation();
   const {
-    data: { token }
+    data: { token, user }
   } = await api.post("/auth/signup", {
     username,
     password,
@@ -57,9 +57,11 @@ export const signup = async ({
     location
   });
   localStorage.setItem("authToken", token);
-  return await upload(profilePic[0]);
+  if (!profilePic[0]) return user;
+  else return await upload(profilePic[0]);
 };
 
+// upload the image to Cloudinary and update the user document
 export const upload = async file => {
   const data = new FormData();
   data.append("image", file);

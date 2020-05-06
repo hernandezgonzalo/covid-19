@@ -15,10 +15,6 @@ router.post("/login", function (req, res, next) {
     if (err) return res.status(401).json(err);
     if (!user) return res.status(401).json(info);
 
-    // req.logIn(user, function (err) {
-    //   if (err) return res.status(401).json(err);
-    // });
-
     const token = issueToken(user);
     return res.json({ success: true, token, user });
   })(req, res, next);
@@ -58,11 +54,6 @@ router.post("/signup", async (req, res, next) => {
     next(e);
   }
 });
-
-// router.get("/logout", ensureAuthenticated, (req, res, next) => {
-//   req.logout();
-//   return res.json({ success: true, message: "Logged out" });
-// });
 
 router.get("/loggedin", ensureAuthenticated, (req, res, next) => {
   return res.json({ success: true, user: req.user });

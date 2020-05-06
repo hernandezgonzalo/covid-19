@@ -1,14 +1,11 @@
 require("dotenv").config();
 
 const bodyParser = require("body-parser");
-// const cookieParser = require("cookie-parser");
 const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
 const path = require("path");
 const cors = require("cors");
-// const session = require("express-session");
-// const MongoStore = require("connect-mongo")(session);
 
 mongoose
   .connect(process.env.MONGODB_URL, {
@@ -50,17 +47,6 @@ app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: true,
-//     saveUninitialized: true,
-//     store: new MongoStore({
-//       mongooseConnection: mongoose.connection
-//     })
-//   })
-// );
 
 require("./passport")(app);
 
