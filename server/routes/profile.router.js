@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const { hashPassword } = require("../lib/hash");
-const { isLoggedIn } = require("../middlewares/isLogged");
+const { ensureAuthenticated } = require("../middlewares/authentication");
 const uploadCloudinaryAvatar = require("../middlewares/uploadImage");
 
 // update profile
-router.post("/", isLoggedIn(), async (req, res, next) => {
+router.post("/", ensureAuthenticated, async (req, res, next) => {
   const { username, password, email, name, surname } = req.body;
   if (!username || !password) {
     return res.json({ success: false, message: "Invalid data" });
@@ -38,7 +38,7 @@ router.post("/", isLoggedIn(), async (req, res, next) => {
 // upload profile image to Cloudinary and update user
 router.post(
   "/image",
-  isLoggedIn(),
+  ensureAuthenticated,
   uploadCloudinaryAvatar.single("image"),
   async (req, res, next) => {
     try {
@@ -52,7 +52,7 @@ router.post(
   }
 );
 
-router.get("/", isLoggedIn(), (req, res, next) => {
+router.get("/", ensureAuthenticated, (req, res, next) => {
   res.json({ success: true, user: req.user.toJSON() });
 });
 

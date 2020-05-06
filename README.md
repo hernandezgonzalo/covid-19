@@ -32,6 +32,7 @@ In order to run this project locally do the following (on both client and server
 * [Express.js](https://expressjs.com/) as the foundation to build the app's backend
 * [Mongoose.js](https://mongoosejs.com/) and [MongoDB](https://www.mongodb.com/) to handle platform models and database
 * [Socket.IO](https://socket.io/) to provide a real-time, bidirectional and event-based communication
+* [JSON Web Tokens](https://jwt.io/) to perform authentication in the application
 
 ## Overview
 

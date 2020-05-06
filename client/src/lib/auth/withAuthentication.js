@@ -8,7 +8,7 @@ export const withAuthentication = Component => () => {
   useEffect(() => {
     // Try to get the current logged in user from the backend
     loggedin()
-      .then(res => setUser(res.user))
+      .then(user => setUser(user))
       .catch(error => console.log(error.message))
       .finally(() => setLoading(false));
   }, []);
