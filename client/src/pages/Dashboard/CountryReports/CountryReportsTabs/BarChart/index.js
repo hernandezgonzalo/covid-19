@@ -92,9 +92,11 @@ export const BarChart = ({ currentView }) => {
 const chartData = (viewCountry, theme) => {
   const datesArray = viewCountry.map(country => country.date);
   const formattedDates = datesArray.map(date => formatDate(date));
-  const cases = viewCountry.map(day => day.confirmed);
-  const deaths = viewCountry.map(day => day.deaths);
-  const recovered = viewCountry.map(day => day.recovered);
+  const cases = viewCountry.map(day => (day.confirmed < 0 ? 0 : day.confirmed));
+  const deaths = viewCountry.map(day => (day.deaths < 0 ? 0 : day.deaths));
+  const recovered = viewCountry.map(day =>
+    day.recovered < 0 ? 0 : day.recovered
+  );
 
   return {
     labels: formattedDates,
