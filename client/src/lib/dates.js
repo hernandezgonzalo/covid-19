@@ -19,8 +19,7 @@ export const datesBetween = dates => {
   return output; // MM-DD-YYYY
 };
 
-export const formatDate = (dateStr, formatType) => {
-  const date = new Date(dateStr);
+export const formatDate = (date, formatType) => {
   const dd = String(date.getDate());
   const mm = String(date.getMonth() + 1);
   const yyyy = date.getFullYear();

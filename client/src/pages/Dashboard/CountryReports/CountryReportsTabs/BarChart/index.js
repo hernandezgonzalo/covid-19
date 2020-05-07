@@ -6,6 +6,7 @@ import { formatDate } from "../../../../../lib/dates";
 import { useTheme, Grid } from "@material-ui/core";
 import DatePicker from "../../../../../components/ui/DatePicker";
 import Loading from "../../../../../components/ui/Loading";
+import { parse } from "date-fns";
 
 export const BarChart = ({ currentView }) => {
   const chartRef = createRef();
@@ -91,7 +92,9 @@ export const BarChart = ({ currentView }) => {
 
 const chartData = (viewCountry, theme) => {
   const datesArray = viewCountry.map(country => country.date);
-  const formattedDates = datesArray.map(date => formatDate(date));
+  const formattedDates = datesArray.map(date =>
+    formatDate(parse(date, "MM-dd-yyyy", new Date()))
+  );
   const cases = viewCountry.map(day => (day.confirmed < 0 ? 0 : day.confirmed));
   const deaths = viewCountry.map(day => (day.deaths < 0 ? 0 : day.deaths));
   const recovered = viewCountry.map(day =>
