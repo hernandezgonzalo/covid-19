@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UpToDateDataContextProvider from "./contexts/UpToDateDataContext";
 import { Navbar } from "./components/Navbar";
 import { Dashboard } from "./pages/Dashboard";
@@ -11,13 +11,22 @@ import { CoronaApp } from "./pages/CoronaApp";
 import NotifierContextProvider from "./contexts/NotifierContext";
 import Test from "./pages/CoronaApp/Test";
 import { ConfirmProvider } from "material-ui-confirm";
+import { changeTheme, getTheme } from "./services/profileService";
+import { useUser } from "./services/authService";
 
 const App = withAuthentication(() => {
-  // Toggle between themes
+  const user = useUser();
   const [theme, setTheme] = useState(createTheme());
+
+  useEffect(() => {
+    if (user) getTheme().then(newTheme => setTheme(createTheme(newTheme)));
+    else setTheme(createTheme("dark"));
+  }, [user]);
+
   const toggleTheme = () => {
     const newTheme = theme.palette.type === "dark" ? "light" : "dark";
     setTheme(createTheme(newTheme));
+    changeTheme(newTheme);
   };
 
   return (
