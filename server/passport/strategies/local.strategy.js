@@ -5,7 +5,9 @@ const User = require("../../models/User");
 passport.use(
   new LocalStrategy({ session: false }, async (username, password, done) => {
     try {
-      const foundUser = await User.findOne({ username });
+      const foundUser = await User.findOne({
+        username: username.toLowerCase()
+      });
       if (foundUser) {
         foundUser.isPasswordOk(password)
           ? done(null, foundUser)
