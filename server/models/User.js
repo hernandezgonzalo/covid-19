@@ -28,7 +28,10 @@ const UserSchema = new Schema(
         required: true
       }
     },
-    geocode: { type: Object }
+    geocode: { type: Object },
+    settings: {
+      theme: { type: String, enum: ["dark", "light"], default: "dark" }
+    }
   },
   {
     timestamps: true,

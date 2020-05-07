@@ -5,6 +5,10 @@ const { hashPassword } = require("../lib/hash");
 const { ensureAuthenticated } = require("../middlewares/authentication");
 const uploadCloudinaryAvatar = require("../middlewares/uploadImage");
 
+router.get("/", ensureAuthenticated, (req, res, next) => {
+  res.json({ success: true, user: req.user.toJSON() });
+});
+
 // update profile
 router.post("/", ensureAuthenticated, async (req, res, next) => {
   const { username, password, email, name, surname } = req.body;
@@ -52,8 +56,29 @@ router.post(
   }
 );
 
-router.get("/", ensureAuthenticated, (req, res, next) => {
-  res.json({ success: true, user: req.user.toJSON() });
+// change theme settings
+router.post("/theme", ensureAuthenticated, async (req, res, next) => {
+  const { theme } = req.body;
+  try {
+    const userFound = await User.findById(req.user._id);
+    userFound.settings.theme = theme;
+    await userFound.save();
+    return res.json({ success: true, message: "Profile updated" });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// get theme settings
+router.get("/theme", ensureAuthenticated, async (req, res, next) => {
+  try {
+    const {
+      settings: { theme }
+    } = await User.findById(req.user._id);
+    return res.json({ success: true, theme });
+  } catch (e) {
+    next(e);
+  }
 });
 
 module.exports = router;
