@@ -26,7 +26,7 @@ const App = withAuthentication(() => {
   const toggleTheme = () => {
     const newTheme = theme.palette.type === "dark" ? "light" : "dark";
     setTheme(createTheme(newTheme));
-    changeTheme(newTheme);
+    if (user) changeTheme(newTheme);
   };
 
   return (
