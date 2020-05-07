@@ -6,7 +6,7 @@ const EMAIL_PATTERN = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 const UserSchema = new Schema(
   {
-    username: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
     email: {
       type: String,
