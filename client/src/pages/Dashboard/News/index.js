@@ -15,9 +15,7 @@ const useStyles = makeStyles(theme => ({
   newsWrapper: {
     height: "calc(100vh - 80px)",
     overflow: "scroll",
-    [theme.breakpoints.down("md")]: { height: "auto", marginTop: 0 },
-    [theme.breakpoints.down("sm")]: { marginTop: "8px" },
-    [theme.breakpoints.down("xs")]: { marginTop: "56px" }
+    [theme.breakpoints.down("md")]: { display: "none" }
   }
 }));
 

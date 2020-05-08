@@ -8,6 +8,7 @@ import CountryReportsTabs from "./CountryReportsTabs";
 
 const useStyles = makeStyles(theme => ({
   boxWrapper: {
+    [theme.breakpoints.down("md")]: { marginRight: "8px" },
     [theme.breakpoints.down("sm")]: { padding: "0 8px" }
   },
   componentsWrapper: { height: "calc(100vh - 80px)" },
