@@ -6,7 +6,7 @@ Live version: https://pandemic19.herokuapp.com
 
 ![screencapture-pandemic19-herokuapp-com-1587728671059](https://user-images.githubusercontent.com/54455748/80210468-1cedf680-8634-11ea-8ff9-b54dc0fa46d4.png)
 
-Its objective is to present the data collected from the [covid19.mathdro.id/api](https://covid19.mathdro.id/api) API using statistics, graphs and a heat map, as well as news about coronavirus from different media.
+It aims to show the data collected from the [covid19.mathdro.id/api](https://covid19.mathdro.id/api) API using statistics, graphs and a heat map, as well as news about coronavirus from different media.
 
 ![screencapture-pandemic19-herokuapp-com-app-1587728849338](https://user-images.githubusercontent.com/54455748/80210551-3c851f00-8634-11ea-9343-dfd2e1371f3a.png)
 
@@ -32,7 +32,7 @@ In order to run this project locally do the following (on both client and server
 * [Express.js](https://expressjs.com/) as the foundation to build the app's backend
 * [Mongoose.js](https://mongoosejs.com/) and [MongoDB](https://www.mongodb.com/) to handle platform models and database
 * [Socket.IO](https://socket.io/) to provide a real-time, bidirectional and event-based communication
-* [JSON Web Tokens](https://jwt.io/) to perform authentication in the application
+* [JSON Web Token](https://jwt.io/) to perform authentication in the application
 
 ## Overview
 
