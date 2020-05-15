@@ -129,6 +129,16 @@ export const Navbar = ({ toggleTheme }) => {
         <MenuItem
           onClick={() => {
             handleMenuClose();
+            history.push("/auth/profile");
+          }}
+        >
+          My profile
+        </MenuItem>
+      )}
+      {user && (
+        <MenuItem
+          onClick={() => {
+            handleMenuClose();
             logout();
             history.push("/");
           }}

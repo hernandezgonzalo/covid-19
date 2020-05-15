@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getLocation } from "../lib/maps";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_SERVER
@@ -9,6 +10,28 @@ api.interceptors.request.use(function (config) {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+export const updateProfile = async ({
+  username,
+  password,
+  name,
+  surname,
+  email
+}) => {
+  const location = await getLocation();
+  const {
+    data: { token, user }
+  } = await api.post("/profile", {
+    username,
+    password,
+    name,
+    surname,
+    email,
+    location
+  });
+  localStorage.setItem("authToken", token);
+  return user;
+};
 
 export const changeTheme = async theme => {
   return await api.post("/profile/theme", { theme });

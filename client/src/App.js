@@ -13,6 +13,7 @@ import Test from "./pages/CoronaApp/Test";
 import { ConfirmProvider } from "material-ui-confirm";
 import { changeTheme, getTheme } from "./services/profileService";
 import { useUser } from "./services/authService";
+import { Profile } from "./pages/auth/Profile";
 
 const App = withAuthentication(() => {
   const user = useUser();
@@ -42,6 +43,7 @@ const App = withAuthentication(() => {
                 <Route exact path="/app/test" component={Test} />
                 <Route exact path="/:countryUrl?" component={Dashboard} />
                 <Route exact path="/auth/signup" component={SignUp} />
+                <Route exact path="/auth/profile" component={Profile} />
               </Switch>
             </UpToDateDataContextProvider>
           </NotifierContextProvider>
