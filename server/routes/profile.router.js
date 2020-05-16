@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const { hashPassword } = require("../lib/hash");
 const { ensureAuthenticated } = require("../middlewares/authentication");
 const uploadCloudinaryAvatar = require("../middlewares/uploadImage");
+const geocoder = require("../lib/geocoder");
+const { issueToken } = require("../lib/token");
 
 router.get("/", ensureAuthenticated, (req, res, next) => {
   res.json({ success: true, user: req.user.toJSON() });
@@ -11,28 +12,33 @@ router.get("/", ensureAuthenticated, (req, res, next) => {
 
 // update profile
 router.post("/", ensureAuthenticated, async (req, res, next) => {
-  const { username, password, email, name, surname } = req.body;
-  if (!username || !password) {
-    return res.json({ success: false, message: "Invalid data" });
-  }
+  const { username, password, name, surname, email, location } = req.body;
+  const { lng, lat } = location;
+
+  if (!username) return res.json({ success: false, message: "Invalid data" });
 
   try {
     const existingUser = await User.findOne({ username });
     if (!existingUser || username === req.user.username) {
+      const [geocode] = await geocoder.reverse({ lat, lon: lng });
       const editUser = await User.findOne(req.user._id);
       Object.assign(editUser, {
         username,
-        password: hashPassword(password),
         email,
         name,
-        surname
+        surname,
+        location: { type: "Point", coordinates: [lng, lat] },
+        geocode
       });
+      if (password) Object.assign(editUser, { password });
       await editUser.save();
-      res.json({ success: true, message: "Profile updated" });
+
+      const token = issueToken(editUser);
+      return res.json({ success: true, token, user: editUser.toJSON() });
     } else {
       return res
         .status(401)
-        .json({ success: false, message: "The user already exists" });
+        .json({ success: false, message: "This username already exists" });
     }
   } catch (e) {
     next(e);
@@ -55,6 +61,16 @@ router.post(
     }
   }
 );
+
+// delete account
+router.get("/delete", ensureAuthenticated, async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+    return res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
 
 // change theme settings
 router.post("/theme", ensureAuthenticated, async (req, res, next) => {
