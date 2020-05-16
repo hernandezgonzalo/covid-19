@@ -20,7 +20,14 @@ export const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2)
   },
+  delete: {
+    margin: theme.spacing(1, 0, 2)
+  },
   input: {
     display: "none"
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff"
   }
 }));

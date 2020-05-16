@@ -6,14 +6,21 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { useForm } from "react-hook-form";
-import { useUserSetter, useUser } from "../../../services/authService";
+import {
+  useUserSetter,
+  useUser,
+  useUserLogout
+} from "../../../services/authService";
 import { NotifierContext } from "../../../contexts/NotifierContext";
-import { CircularProgress } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { withProtected } from "../../../lib/auth/withProtected";
 import cloudinary from "cloudinary-core";
 import _ from "lodash";
-import { updateProfile } from "../../../services/profileService";
+import { updateProfile, deleteAccount } from "../../../services/profileService";
+import { useConfirm } from "material-ui-confirm";
+import { useHistory } from "react-router-dom";
+import Backdrop from "@material-ui/core/Backdrop";
+import { CircularProgress } from "@material-ui/core";
 
 const EMAIL_PATTERN = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -22,11 +29,14 @@ const cloudy = cloudinary.Cloudinary.new({
 });
 
 export const Profile = withProtected(() => {
+  const history = useHistory();
+  const confirm = useConfirm();
   const user = useUser();
   const setUser = useUserSetter();
+  const logout = useUserLogout();
   const classes = useStyles();
   const { setFlash } = useContext(NotifierContext);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const { register, handleSubmit, errors } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -54,23 +64,38 @@ export const Profile = withProtected(() => {
   );
 
   const onSubmit = async data => {
-    setIsUploading(true);
+    setIsBusy(true);
     updateProfile(data)
       .then(user => {
         setUser(user);
-        setIsUploading(false);
-        setFlash({
-          type: "success",
-          message: `Profile updated`
-        });
+        setFlash({ type: "success", message: `Profile updated` });
       })
       .catch(error => {
-        setIsUploading(false);
-        setFlash({
-          type: "error",
-          message: error.response.data.message
-        });
-      });
+        setFlash({ type: "error", message: error.response.data.message });
+      })
+      .finally(() => setIsBusy(false));
+  };
+
+  const handleDelete = () => {
+    confirm({
+      title: "Delete account",
+      description: "You are about to delete your user account. Are you sure?",
+      confirmationText: "Yes",
+      cancellationText: "No",
+      dialogProps: { maxWidth: "xs" }
+    })
+      .then(async () => {
+        setIsBusy(true);
+        try {
+          await deleteAccount();
+          history.push("/");
+          logout();
+          setFlash({ type: "success", message: "Account deleted" });
+        } catch (error) {
+          console.error(error.response?.data.message);
+        }
+      })
+      .catch(() => null);
   };
 
   const inputStyle = {
@@ -148,12 +173,23 @@ export const Profile = withProtected(() => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            disabled={isUploading}
           >
-            {isUploading ? <CircularProgress size={24} /> : "Update profile"}
+            Update profile
           </Button>
         </form>
+        <Button
+          fullWidth
+          variant="contained"
+          color="secondary"
+          className={classes.delete}
+          onClick={handleDelete}
+        >
+          Delete account
+        </Button>
       </div>
+      <Backdrop className={classes.backdrop} open={isBusy}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Container>
   );
 });
