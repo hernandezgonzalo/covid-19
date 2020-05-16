@@ -62,6 +62,16 @@ router.post(
   }
 );
 
+// delete account
+router.get("/delete", ensureAuthenticated, async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+    return res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // change theme settings
 router.post("/theme", ensureAuthenticated, async (req, res, next) => {
   const { theme } = req.body;
