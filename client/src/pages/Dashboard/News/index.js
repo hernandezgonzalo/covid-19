@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useLayoutEffect,
+  useRef,
+  useReducer
+} from "react";
 import {
   makeStyles,
   Paper,
@@ -25,12 +31,25 @@ const Loading = () => (
   </Box>
 );
 
+const newsReducer = (state, action) => {
+  switch (action.type) {
+    case "INCREASE_NUMBER":
+      return { ...state, number: state.number + 5 };
+    case "SET_ARTICLES":
+      return { ...state, articles: action.articles };
+    default:
+      throw new Error();
+  }
+};
+
 const News = () => {
-  const classes = useStyles();
-  const [articles, setArticles] = useState([]);
-  const [newsN, setNewsN] = useState(5);
+  const [news, newsDispatch] = useReducer(newsReducer, {
+    number: 5,
+    articles: []
+  });
   const newsRef = useRef();
   const [isLazy, setIsLazy] = useState(false);
+  const classes = useStyles();
 
   useLayoutEffect(() => {
     const { current } = newsRef;
@@ -39,20 +58,20 @@ const News = () => {
         const { scrollHeight, scrollTop, clientHeight } = e.target;
         if (scrollHeight - (scrollTop + clientHeight) === 0 && !isLazy) {
           setIsLazy(true);
-          setNewsN(n => n + 5);
+          newsDispatch({ type: "INCREASE_NUMBER" });
         }
       };
     }
-  }, [articles, isLazy]);
+  }, [news.articles, isLazy]);
 
   useEffect(() => {
-    getNews(newsN).then(response => {
-      setArticles(response);
+    getNews(news.number).then(response => {
+      newsDispatch({ type: "SET_ARTICLES", articles: response });
       setIsLazy(false);
     });
-  }, [newsN]);
+  }, [news.number]);
 
-  if (_.isEmpty(articles))
+  if (_.isEmpty(news.articles))
     return (
       <Grid item xs={12} md={4} lg={3}>
         <Box m={1} textAlign="center">
@@ -71,7 +90,7 @@ const News = () => {
         className={classes.newsWrapper}
         ref={newsRef}
       >
-        {articles.map((article, i) => (
+        {news.articles.map((article, i) => (
           <NewsCard key={i} {...article} />
         ))}
         {isLazy && <Loading />}
