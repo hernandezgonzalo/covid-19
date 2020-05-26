@@ -1,8 +1,5 @@
 import axios from "axios";
 
-axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded";
-
 const api = axios.create({
   baseURL: process.env.REACT_APP_NEWS_API_URL,
   headers: { Authorization: process.env.REACT_APP_NEWS_API_KEY }
