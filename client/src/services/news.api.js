@@ -1,13 +1,13 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_NEWS_API_URL,
-  headers: { Authorization: process.env.REACT_APP_NEWS_API_KEY }
+  baseURL: process.env.REACT_APP_NEWS_API_URL
 });
 
 export const getNews = async (newsN = 5) => {
   const response = await api.get("/everything", {
     params: {
+      apiKey: process.env.REACT_APP_NEWS_API_KEY,
       qInTitle: "coronavirus OR covid",
       sortBy: "publishedAt",
       language: "en",
