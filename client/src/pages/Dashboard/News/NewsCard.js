@@ -18,23 +18,23 @@ const useStyles = makeStyles({
 
 export default function NewsCard({
   source,
-  title,
-  description,
-  url,
-  urlToImage,
-  publishedAt
+  headline,
+  snippet,
+  web_url,
+  multimedia,
+  pub_date
 }) {
   const classes = useStyles();
 
   return (
     <Card className={classes.root} square>
-      <CardActionArea onClick={() => window.open(url)}>
-        {urlToImage && (
+      <CardActionArea onClick={() => window.open(web_url)}>
+        {multimedia[0] && (
           <CardMedia
             component="img"
-            alt={title}
+            alt={headline.main}
             height="140"
-            image={urlToImage}
+            image={`http://www.nytimes.com/${multimedia[0]?.url}`}
           />
         )}
         <CardContent>
@@ -44,7 +44,7 @@ export default function NewsCard({
             component="h2"
             className={classes.title}
           >
-            {title}
+            {headline.main}
           </Typography>
           <Typography
             variant="body2"
@@ -52,17 +52,17 @@ export default function NewsCard({
             component="p"
             className={classes.snippet}
           >
-            {description}
+            {snippet}
           </Typography>
           <Grid container justify="space-between">
             <Grid item>
               <Typography color="textSecondary" className={classes.footer}>
-                {source.name}
+                {source}
               </Typography>
             </Grid>
             <Grid item>
               <Typography color="textSecondary" className={classes.footer}>
-                <TimeAgo date={new Date(publishedAt)} />
+                <TimeAgo date={new Date(pub_date)} />
               </Typography>
             </Grid>
           </Grid>
