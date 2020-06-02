@@ -33,10 +33,10 @@ const Loading = () => (
 
 const newsReducer = (state, action) => {
   switch (action.type) {
-    case "INCREASE_NUMBER":
-      return { ...state, number: state.number + 5 };
+    case "INCREASE_PAGE":
+      return { ...state, page: state.page + 1 };
     case "SET_ARTICLES":
-      return { ...state, articles: action.articles };
+      return { ...state, articles: [...state.articles, ...action.articles] };
     default:
       throw new Error();
   }
@@ -44,7 +44,7 @@ const newsReducer = (state, action) => {
 
 const News = () => {
   const [news, newsDispatch] = useReducer(newsReducer, {
-    number: 5,
+    page: 0,
     articles: []
   });
   const newsRef = useRef();
@@ -58,18 +58,18 @@ const News = () => {
         const { scrollHeight, scrollTop, clientHeight } = e.target;
         if (scrollHeight - (scrollTop + clientHeight) === 0 && !isLazy) {
           setIsLazy(true);
-          newsDispatch({ type: "INCREASE_NUMBER" });
+          newsDispatch({ type: "INCREASE_PAGE" });
         }
       };
     }
   }, [news.articles, isLazy]);
 
   useEffect(() => {
-    getNews(news.number).then(response => {
+    getNews(news.page).then(response => {
       newsDispatch({ type: "SET_ARTICLES", articles: response });
       setIsLazy(false);
     });
-  }, [news.number]);
+  }, [news.page]);
 
   if (_.isEmpty(news.articles))
     return (

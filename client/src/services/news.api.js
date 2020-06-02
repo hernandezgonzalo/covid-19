@@ -1,23 +1,22 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_NEWS_API_URL,
-  headers: { Authorization: process.env.REACT_APP_NEWS_API_KEY }
+  baseURL: process.env.REACT_APP_NEWS_API_URL
 });
 
-export const getNews = async (newsN = 5) => {
+export const getNews = async page => {
   try {
-    const response = await api.get("/everything", {
+    const response = await api.get("/articlesearch.json", {
       params: {
-        qInTitle: "coronavirus OR covid",
-        sortBy: "publishedAt",
-        language: "en",
-        domains:
-          "bbc.co.uk, engadget.com, theguardian.com, cnn.com, nbcnews.com, apnews.com, cbsnews.com",
-        pageSize: newsN
+        "api-key": process.env.REACT_APP_NEWS_API_KEY,
+        q: '("coronavirus" "covid")',
+        fq:
+          'source:("The New York Times") AND headline:("coronavirus" "covid")',
+        sort: "newest",
+        page
       }
     });
-    return response.data.articles;
+    return response.data.response.docs;
   } catch (error) {
     console.error(error);
   }
