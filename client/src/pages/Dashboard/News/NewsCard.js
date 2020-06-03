@@ -31,7 +31,7 @@ export default function NewsCard({
             component="img"
             alt={headline.main}
             height="140"
-            image={`http://www.nytimes.com/${multimedia[0]?.url}`}
+            image={`https://www.nytimes.com/${multimedia[0]?.url}`}
           />
         )}
         <CardContent>
