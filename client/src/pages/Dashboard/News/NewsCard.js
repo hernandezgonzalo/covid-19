@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import TimeAgo from "../../../components/ui/TimeAgo";
+import { parseISO } from "date-fns";
 
 const useStyles = makeStyles({
   title: { fontSize: "1rem", lineHeight: "1.2rem" },
@@ -59,7 +60,7 @@ export default function NewsCard({
             </Grid>
             <Grid item>
               <Typography color="textSecondary" className={classes.footer}>
-                <TimeAgo date={new Date(pub_date)} />
+                <TimeAgo date={parseISO(pub_date)} />
               </Typography>
             </Grid>
           </Grid>
