@@ -8,9 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import TimeAgo from "../../../components/ui/TimeAgo";
 
 const useStyles = makeStyles({
-  root: {
-    // maxWidth: 345
-  },
   title: { fontSize: "1rem", lineHeight: "1.2rem" },
   snippet: { lineHeight: "1.2rem", marginBottom: ".5em" },
   footer: { fontSize: ".8rem", opacity: ".6" }
@@ -27,7 +24,7 @@ export default function NewsCard({
   const classes = useStyles();
 
   return (
-    <Card className={classes.root} square>
+    <Card square>
       <CardActionArea onClick={() => window.open(web_url)}>
         {multimedia[0] && (
           <CardMedia
