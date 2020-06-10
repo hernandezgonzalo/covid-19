@@ -3,7 +3,7 @@ import { Bar, defaults } from "react-chartjs-2";
 import { DailyDataContext } from "../../../../../contexts/DailyDataContext";
 import _ from "lodash";
 import { formatDate } from "../../../../../lib/dates";
-import { useTheme, Grid } from "@material-ui/core";
+import { useTheme, Grid, LinearProgress } from "@material-ui/core";
 import DatePicker from "../../../../../components/ui/DatePicker";
 import Loading from "../../../../../components/ui/Loading";
 import { parse } from "date-fns";
@@ -11,7 +11,7 @@ import { parse } from "date-fns";
 export const BarChart = ({ currentView }) => {
   const chartRef = createRef();
   const datePickersRef = createRef();
-  const { dates, setDates, countries, worldwide } = useContext(
+  const { dates, setDates, countries, worldwide, isDatesLoading } = useContext(
     DailyDataContext
   );
 
@@ -21,7 +21,9 @@ export const BarChart = ({ currentView }) => {
 
   useEffect(() => {
     if (chartRef.current && datePickersRef.current)
-      chartRef.current.chartInstance.canvas.parentNode.style.height = `calc(100% - ${datePickersRef.current.offsetHeight}px)`;
+      chartRef.current.chartInstance.canvas.parentNode.style.height = `calc(100% - ${
+        datePickersRef.current.offsetHeight + 5
+      }px)`;
   });
 
   if (_.isEmpty(countries) || _.isEmpty(worldwide)) return <Loading />;
@@ -50,6 +52,7 @@ export const BarChart = ({ currentView }) => {
 
   return (
     <>
+      <div style={{ height: 5 }}>{isDatesLoading && <LinearProgress />}</div>
       <Grid container justify="space-evenly" ref={datePickersRef}>
         <Grid item>
           <DatePicker
