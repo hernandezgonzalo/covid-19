@@ -23,11 +23,13 @@ const DailyDataContextProvider = ({ children }) => {
   const [dates, setDates] = useState([calcOneMonthAgo(), calcYesterday()]); // MM-DD-YYYY
   const [countries, setCountries] = useState([]);
   const [worldwide, setWorldwide] = useState({});
+  const [isDatesLoading, setIsDatesLoading] = useState(false);
 
   const isCountries = !_.isEmpty(countries);
 
   useEffect(() => {
     let isSubscribed = true;
+    setIsDatesLoading(true);
 
     getProvinces(dates)
       .then(provinces => {
@@ -41,14 +43,15 @@ const DailyDataContextProvider = ({ children }) => {
       .catch(e => {
         if (!isCountries && isSubscribed)
           setDates([calcOneMonthAgo(2), calcYesterday(2)]);
-      });
+      })
+      .finally(() => setIsDatesLoading(false));
 
     return () => (isSubscribed = false);
   }, [dates, isCountries]);
 
   return (
     <DailyDataContext.Provider
-      value={{ dates, setDates, countries, worldwide }}
+      value={{ dates, setDates, countries, worldwide, isDatesLoading }}
     >
       {children}
     </DailyDataContext.Provider>
