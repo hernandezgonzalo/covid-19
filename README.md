@@ -45,9 +45,4 @@ Please read [CONTRIBUTING.md](https://github.com/hernandezgonzalo/covid-19/blob/
 
 ## Authors
 
-<table>
-<tr>
-<td align="center"><a href="https://github.com/hernandezgonzalo"><img src="https://avatars1.githubusercontent.com/u/54455748?s=400&v=4" width="100px;" title="Gonzalo Hernández" style="border-radius: 50%"/></a>
-</td>
-</tr>
-</table>
+<a href="https://github.com/hernandezgonzalo"><img src="https://avatars1.githubusercontent.com/u/54455748?s=400&v=4" width="100px" title="Gonzalo Hernández" style="border-radius:50%"/></a>
