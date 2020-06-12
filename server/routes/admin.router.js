@@ -77,7 +77,7 @@ router.post("/", async (req, res, next) => {
 
     const usersFormatted = users.map(user => {
       let image;
-      if (user.image) image = user.image.url || user.image;
+      if (user.image) image = user.image.secure_url || user.image;
       const userObj = {
         id: user._id,
         location: user.location,

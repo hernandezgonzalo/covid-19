@@ -44,7 +44,7 @@ const DailyDataContextProvider = ({ children }) => {
         if (!isCountries && isSubscribed)
           setDates([calcOneMonthAgo(2), calcYesterday(2)]);
       })
-      .finally(() => setIsDatesLoading(false));
+      .finally(() => isSubscribed && setIsDatesLoading(false));
 
     return () => (isSubscribed = false);
   }, [dates, isCountries]);
