@@ -2,7 +2,7 @@
 
 > An application to keep track of coronavirus cases
 
-Live version: https://pandemic19.herokuapp.com | 
+Live version: https://covid19.gonzalohernandez.vercel.app | 
 [Watch video presentation](https://www.linkedin.com/posts/ghgarcia_react-nodejs-javascript-activity-6661150389817217024-XAbU)
 
 ![screencapture-pandemic19-herokuapp-com-1587728671059](https://user-images.githubusercontent.com/54455748/80210468-1cedf680-8634-11ea-8ff9-b54dc0fa46d4.png)
@@ -45,4 +45,9 @@ Please read [CONTRIBUTING.md](https://github.com/hernandezgonzalo/covid-19/blob/
 
 ## Authors
 
-* Gonzalo Hernández - [LinkedIn](https://www.linkedin.com/in/ghgarcia/)
+<table>
+<tr>
+<td align="center"><a href="https://github.com/hernandezgonzalo"><img src="https://avatars1.githubusercontent.com/u/54455748?s=400&v=4" width="100px;" title="Gonzalo Hernández" style="border-radius: 50%"/></a>
+</td>
+</tr>
+</table>
