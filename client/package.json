@@ -17,6 +17,7 @@
     "cloudinary-core": "^2.8.2",
     "date-fns": "^2.11.1",
     "flag-icon-css": "^3.4.6",
+    "framer-motion": "^1.11.1",
     "history": "^4.10.1",
     "material-table": "^1.57.2",
     "material-ui-confirm": "^2.0.4",
