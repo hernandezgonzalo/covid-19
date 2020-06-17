@@ -228,13 +228,9 @@ export const Navbar = ({ toggleTheme }) => {
       >
         <Toolbar>
           <motion.div
-            initial={{ x: "-50vw", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{
-              delay: 1,
-              type: "spring",
-              stiffness: 50
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
             style={{ display: "flex", alignItems: "center" }}
           >
             <Tooltip title="Home">
