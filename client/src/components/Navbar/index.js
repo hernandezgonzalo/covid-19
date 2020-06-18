@@ -29,6 +29,11 @@ const cloudy = cloudinary.Cloudinary.new({
   cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
 });
 
+const logoVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { delay: 1 } }
+};
+
 export const Navbar = ({ toggleTheme }) => {
   const user = useUser();
   const logout = useUserLogout();
@@ -228,9 +233,9 @@ export const Navbar = ({ toggleTheme }) => {
       >
         <Toolbar>
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
+            variants={logoVariants}
+            initial="hidden"
+            animate="visible"
             style={{ display: "flex", alignItems: "center" }}
           >
             <Tooltip title="Home">
