@@ -23,7 +23,6 @@ import _ from "lodash";
 import cloudinary from "cloudinary-core";
 import { NotifierContext } from "../../contexts/NotifierContext";
 import Notifications from "./Notifications";
-import { motion } from "framer-motion";
 
 const cloudy = cloudinary.Cloudinary.new({
   cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
@@ -227,27 +226,20 @@ export const Navbar = ({ toggleTheme }) => {
         elevation={1}
       >
         <Toolbar>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <Tooltip title="Home">
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="home"
-                onClick={() => history.push("/")}
-              >
-                <TimelineIcon />
-              </IconButton>
-            </Tooltip>
-            <Typography className={classes.title} variant="h6" noWrap>
-              COVID-19 PANDEMIC STATISTICS
-            </Typography>
-          </motion.div>
+          <Tooltip title="Home">
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="home"
+              onClick={() => history.push("/")}
+            >
+              <TimelineIcon />
+            </IconButton>
+          </Tooltip>
+          <Typography className={classes.title} variant="h6" noWrap>
+            COVID-19 PANDEMIC STATISTICS
+          </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <Tooltip title="Corona App">
