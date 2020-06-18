@@ -1,7 +1,7 @@
 import axios from "axios";
 import { round } from "../lib/calc";
 
-const countriesToAdjust = ["US", "Brazil", "Chile"];
+const countriesToAdjust = ["US", "Brazil", "Chile", "Peru"];
 
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_COVID_API_URL}`
