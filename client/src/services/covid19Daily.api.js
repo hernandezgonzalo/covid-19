@@ -1,11 +1,8 @@
 import axios from "axios";
 import { datesBetween } from "../lib/dates";
+import dataConfig from "../data.config.json";
 
-const countriesToRename = [
-  ["China", ["Mainland China"]],
-  ["Korea, South", ["Republic of Korea", "South Korea"]],
-  ["United Kingdom", ["UK"]]
-];
+const countriesToRename = dataConfig.countriesToRename;
 
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_COVID_API_URL}/daily`
