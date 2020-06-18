@@ -43,13 +43,13 @@ const UpdatedList = () => {
   return (
     <Grid item xs={12} md={3} lg={2}>
       <Box m={1}>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <TableContainer
-            component={Paper}
-            variant="outlined"
-            square
-            className={classes.listWrapper}
-          >
+        <TableContainer
+          component={Paper}
+          variant="outlined"
+          square
+          className={classes.listWrapper}
+        >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <Table size="small" aria-label="countries list">
               <TableBody>
                 {countries.slice(0, countriesToShow).map(country => (
@@ -60,8 +60,8 @@ const UpdatedList = () => {
             <Typography variant="body2" align="center" color="textSecondary">
               Showing {countriesToShow} of {countries.length} territories
             </Typography>
-          </TableContainer>
-        </motion.div>
+          </motion.div>
+        </TableContainer>
       </Box>
     </Grid>
   );
