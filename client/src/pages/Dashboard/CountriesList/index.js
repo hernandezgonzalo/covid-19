@@ -13,6 +13,7 @@ import {
 import Skeleton from "@material-ui/lab/Skeleton";
 import ListItem from "./ListItem";
 import _ from "lodash";
+import { motion } from "framer-motion";
 
 const useStyles = makeStyles(theme => ({
   listWrapper: {
@@ -42,23 +43,25 @@ const UpdatedList = () => {
   return (
     <Grid item xs={12} md={3} lg={2}>
       <Box m={1}>
-        <TableContainer
-          component={Paper}
-          variant="outlined"
-          square
-          className={classes.listWrapper}
-        >
-          <Table size="small" aria-label="countries list">
-            <TableBody>
-              {countries.slice(0, countriesToShow).map(country => (
-                <ListItem key={country.countryRegion} {...{ country }} />
-              ))}
-            </TableBody>
-          </Table>
-          <Typography variant="body2" align="center" color="textSecondary">
-            Showing {countriesToShow} of {countries.length} territories
-          </Typography>
-        </TableContainer>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <TableContainer
+            component={Paper}
+            variant="outlined"
+            square
+            className={classes.listWrapper}
+          >
+            <Table size="small" aria-label="countries list">
+              <TableBody>
+                {countries.slice(0, countriesToShow).map(country => (
+                  <ListItem key={country.countryRegion} {...{ country }} />
+                ))}
+              </TableBody>
+            </Table>
+            <Typography variant="body2" align="center" color="textSecondary">
+              Showing {countriesToShow} of {countries.length} territories
+            </Typography>
+          </TableContainer>
+        </motion.div>
       </Box>
     </Grid>
   );
