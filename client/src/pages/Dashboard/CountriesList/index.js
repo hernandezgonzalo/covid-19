@@ -13,7 +13,6 @@ import {
 import Skeleton from "@material-ui/lab/Skeleton";
 import ListItem from "./ListItem";
 import _ from "lodash";
-import { motion } from "framer-motion";
 
 const useStyles = makeStyles(theme => ({
   listWrapper: {
@@ -49,18 +48,16 @@ const UpdatedList = () => {
           square
           className={classes.listWrapper}
         >
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <Table size="small" aria-label="countries list">
-              <TableBody>
-                {countries.slice(0, countriesToShow).map(country => (
-                  <ListItem key={country.countryRegion} {...{ country }} />
-                ))}
-              </TableBody>
-            </Table>
-            <Typography variant="body2" align="center" color="textSecondary">
-              Showing {countriesToShow} of {countries.length} territories
-            </Typography>
-          </motion.div>
+          <Table size="small" aria-label="countries list">
+            <TableBody>
+              {countries.slice(0, countriesToShow).map(country => (
+                <ListItem key={country.countryRegion} {...{ country }} />
+              ))}
+            </TableBody>
+          </Table>
+          <Typography variant="body2" align="center" color="textSecondary">
+            Showing {countriesToShow} of {countries.length} territories
+          </Typography>
         </TableContainer>
       </Box>
     </Grid>
