@@ -15,6 +15,8 @@ import { useForm } from "react-hook-form";
 import { useUserSetter, login } from "../../../services/authService";
 import { NotifierContext } from "../../../contexts/NotifierContext";
 import { useStyles } from "./styles";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import FacebookIcon from "@material-ui/icons/Facebook";
 
 export default function LoginDialog({ openLogin, setOpenLogin }) {
   const [open, setOpen] = useState(false);
@@ -129,10 +131,11 @@ const LoginForm = ({ handleClose }) => {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            className={classes.localLogin}
           >
             Login
           </Button>
+          <FacebookButton handleClose={handleClose} />
           <Grid container>
             <Grid item>
               <Link href="" onClick={handleSignUp} variant="body2">
@@ -143,5 +146,33 @@ const LoginForm = ({ handleClose }) => {
         </form>
       </div>
     </Container>
+  );
+};
+
+const FacebookButton = ({ handleClose }) => {
+  const classes = useStyles();
+
+  const facebookResponse = response => {
+    handleClose();
+    console.log(response);
+  };
+
+  return (
+    <FacebookLogin
+      appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+      autoLoad={false}
+      callback={facebookResponse}
+      render={props => (
+        <Button
+          onClick={props.onClick}
+          fullWidth
+          variant="contained"
+          className={classes.facebookLogin}
+          endIcon={<FacebookIcon />}
+        >
+          Login with Facebook
+        </Button>
+      )}
+    />
   );
 };

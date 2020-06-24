@@ -15,7 +15,11 @@ export const useStyles = makeStyles(theme => ({
     width: "100%",
     marginTop: theme.spacing(1)
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
+  localLogin: {
+    margin: theme.spacing(3, 0, 1)
+  },
+  facebookLogin: {
+    margin: theme.spacing(1, 0, 2),
+    color: "#4267b2"
   }
 }));
