@@ -31,6 +31,10 @@ const UserSchema = new Schema(
     geocode: { type: Object },
     settings: {
       theme: { type: String, enum: ["dark", "light"], default: "dark" }
+    },
+    facebookProvider: {
+      id: String,
+      token: String
     }
   },
   {

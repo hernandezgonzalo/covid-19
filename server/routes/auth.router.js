@@ -6,12 +6,8 @@ const { ensureAuthenticated } = require("../middlewares/authentication");
 const geocoder = require("../lib/geocoder");
 const { issueToken } = require("../lib/token");
 
-router.post("/login", function (req, res, next) {
-  passport.authenticate("local", { session: false }, function (
-    err,
-    user,
-    info
-  ) {
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) return res.status(401).json(err);
     if (!user) return res.status(401).json(info);
 
@@ -58,5 +54,13 @@ router.post("/signup", async (req, res, next) => {
 router.get("/loggedin", ensureAuthenticated, (req, res, next) => {
   return res.json({ success: true, user: req.user });
 });
+
+router.get(
+  "/facebook",
+  passport.authenticate("facebook-token", { session: false }),
+  (req, res, next) => {
+    console.log("FACEBOOK", req.user);
+  }
+);
 
 module.exports = router;

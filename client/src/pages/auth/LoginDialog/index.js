@@ -12,7 +12,11 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { useHistory, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useUserSetter, login } from "../../../services/authService";
+import {
+  useUserSetter,
+  login,
+  facebookLogin
+} from "../../../services/authService";
 import { NotifierContext } from "../../../contexts/NotifierContext";
 import { useStyles } from "./styles";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
@@ -153,8 +157,8 @@ const FacebookButton = ({ handleClose }) => {
   const classes = useStyles();
 
   const facebookResponse = response => {
+    facebookLogin(response);
     handleClose();
-    console.log(response);
   };
 
   return (

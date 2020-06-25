@@ -88,3 +88,10 @@ export const loggedin = async () => {
   const res = await api.get("/auth/loggedin");
   return res.data.user;
 };
+
+export const facebookLogin = async facebookResponse => {
+  const authStr = "Bearer ".concat(facebookResponse.accessToken);
+  await api.get("/auth/facebook", {
+    headers: { Authorization: authStr }
+  });
+};

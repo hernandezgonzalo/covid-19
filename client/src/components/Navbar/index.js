@@ -20,13 +20,9 @@ import { useStyles } from "./styles";
 import { useUser, useUserLogout } from "../../services/authService";
 import LoginDialog from "../../pages/auth/LoginDialog";
 import _ from "lodash";
-import cloudinary from "cloudinary-core";
 import { NotifierContext } from "../../contexts/NotifierContext";
 import Notifications from "./Notifications";
-
-const cloudy = cloudinary.Cloudinary.new({
-  cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
-});
+import { retrieveImgUrl } from "../../lib/profile";
 
 export const Navbar = ({ toggleTheme }) => {
   const user = useUser();
@@ -40,16 +36,7 @@ export const Navbar = ({ toggleTheme }) => {
   const [openLogin, setOpenLogin] = useState(false);
   const { notifications } = useContext(NotifierContext);
 
-  let userImage;
-  if (user) {
-    const userImg = _.get(user, "image.public_id");
-    userImage = cloudy.url(userImg, {
-      width: 50,
-      height: 50,
-      crop: "fill",
-      secure: true
-    });
-  }
+  const userImage = retrieveImgUrl(user, 50);
 
   const UserAvatar = () => (
     <Avatar alt={user.name} src={userImage} className={classes.avatar} />

@@ -14,19 +14,14 @@ import {
 import { NotifierContext } from "../../../contexts/NotifierContext";
 import { useStyles } from "./styles";
 import { withProtected } from "../../../lib/auth/withProtected";
-import cloudinary from "cloudinary-core";
-import _ from "lodash";
 import { updateProfile, deleteAccount } from "../../../services/profileService";
 import { useConfirm } from "material-ui-confirm";
 import { useHistory } from "react-router-dom";
 import Backdrop from "@material-ui/core/Backdrop";
 import { CircularProgress } from "@material-ui/core";
+import { retrieveImgUrl } from "../../../lib/profile";
 
 const EMAIL_PATTERN = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-
-const cloudy = cloudinary.Cloudinary.new({
-  cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
-});
 
 export const Profile = withProtected(() => {
   const history = useHistory();
@@ -48,16 +43,7 @@ export const Profile = withProtected(() => {
     }
   });
 
-  let userImage;
-  if (user) {
-    const userImg = _.get(user, "image.public_id");
-    userImage = cloudy.url(userImg, {
-      width: 200,
-      height: 200,
-      crop: "fill",
-      secure: true
-    });
-  }
+  const userImage = retrieveImgUrl(user, 200);
 
   const UserAvatar = () => (
     <Avatar alt="User image" src={userImage} className={classes.avatar} />

@@ -1,12 +1,7 @@
 import React from "react";
 import { makeStyles, Avatar, Typography, Box } from "@material-ui/core";
 import TimeAgo from "../../../components/ui/TimeAgo";
-import _ from "lodash";
-import cloudinary from "cloudinary-core";
-
-const cloudy = cloudinary.Cloudinary.new({
-  cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
-});
+import { retrieveImgUrl } from "../../../lib/profile";
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -26,15 +21,7 @@ export const useStyles = makeStyles(theme => ({
 const SelectedInfo = ({ selected }) => {
   const classes = useStyles();
 
-  const cloudinaryImg = _.get(selected.user, "image.public_id");
-  const userImage = cloudinaryImg
-    ? cloudy.url(cloudinaryImg, {
-        width: 128,
-        height: 128,
-        crop: "fill",
-        secure: true
-      })
-    : selected.user.image;
+  const userImage = retrieveImgUrl(selected.user, 128);
 
   return (
     <div className={classes.root}>

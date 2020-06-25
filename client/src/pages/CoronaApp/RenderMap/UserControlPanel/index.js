@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Chip, Avatar, Box } from "@material-ui/core";
 import { checkUserCase, removeCase } from "../../../../services/appService";
-import cloudinary from "cloudinary-core";
 import _ from "lodash";
 import { useUser } from "../../../../services/authService";
 import TimeAgo from "../../../../components/ui/TimeAgo";
@@ -11,10 +10,7 @@ import { useHistory } from "react-router-dom";
 import AddCircleTwoToneIcon from "@material-ui/icons/AddCircleTwoTone";
 import HighlightOffTwoToneIcon from "@material-ui/icons/HighlightOffTwoTone";
 import { useConfirm } from "material-ui-confirm";
-
-const cloudy = cloudinary.Cloudinary.new({
-  cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
-});
+import { retrieveImgUrl } from "../../../../lib/profile";
 
 const UserControlPanel = ({ cases, setSelected, selected }) => {
   const [caseInfo, setCaseInfo] = useState();
@@ -24,16 +20,7 @@ const UserControlPanel = ({ cases, setSelected, selected }) => {
   const history = useHistory();
   const confirm = useConfirm();
 
-  let userImage;
-  if (user) {
-    const userImg = _.get(user, "image.public_id");
-    userImage = cloudy.url(userImg, {
-      width: 50,
-      height: 50,
-      crop: "fill",
-      secure: true
-    });
-  }
+  const userImage = retrieveImgUrl(user, 50);
 
   useEffect(() => {
     checkUserCase().then(res => {
