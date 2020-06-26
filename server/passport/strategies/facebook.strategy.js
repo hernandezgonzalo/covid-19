@@ -24,14 +24,12 @@ passport.use(
             surname: profile.name.familyName,
             image: profile.photos[0].value,
             email: profile.emails[0].value,
-            location: { coordinates: [1, 1] },
             facebookProvider: {
               id: profile.id,
               token: accessToken
             }
           };
-          const savedUser = await User.create(newUser);
-          return done(null, savedUser);
+          return done(null, newUser);
         } else {
           return done(null, userFound);
         }

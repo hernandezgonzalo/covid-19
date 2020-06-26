@@ -156,8 +156,8 @@ const LoginForm = ({ handleClose }) => {
 const FacebookButton = ({ handleClose }) => {
   const classes = useStyles();
 
-  const facebookResponse = response => {
-    facebookLogin(response);
+  const facebookResponse = async response => {
+    console.log(await facebookLogin(response));
     handleClose();
   };
 

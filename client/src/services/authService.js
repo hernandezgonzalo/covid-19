@@ -90,8 +90,11 @@ export const loggedin = async () => {
 };
 
 export const facebookLogin = async facebookResponse => {
+  const location = await getLocation();
   const authStr = "Bearer ".concat(facebookResponse.accessToken);
-  await api.get("/auth/facebook", {
-    headers: { Authorization: authStr }
-  });
+  return await api.post(
+    "/auth/facebook",
+    { location },
+    { headers: { Authorization: authStr } }
+  );
 };

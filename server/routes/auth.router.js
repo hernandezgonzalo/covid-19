@@ -55,11 +55,23 @@ router.get("/loggedin", ensureAuthenticated, (req, res, next) => {
   return res.json({ success: true, user: req.user });
 });
 
-router.get(
+router.post(
   "/facebook",
   passport.authenticate("facebook-token", { session: false }),
-  (req, res, next) => {
-    console.log("FACEBOOK", req.user);
+  async (req, res, next) => {
+    const { user } = req;
+    const { lng, lat } = req.body.location;
+    const [geocode] = await geocoder.reverse({ lat, lon: lng });
+
+    user.location = { coordinates: [lng, lat] };
+    user.geocode = geocode;
+
+    try {
+      const savedUser = await User.create(user);
+      return res.json({ success: true, user: savedUser.toJSON() });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
