@@ -3,8 +3,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-import cloudinary from "cloudinary-core";
-import _ from "lodash";
 import TimeAgo from "../ui/TimeAgo";
 import { makeStyles } from "@material-ui/core";
 import {
@@ -13,6 +11,7 @@ import {
 } from "../../services/notificationsService";
 import { useHistory } from "react-router-dom";
 import { NotifierContext } from "../../contexts/NotifierContext";
+import { retrieveImgUrl } from "../../lib/profile";
 
 const useStyles = makeStyles(theme => ({
   item: {
@@ -29,10 +28,6 @@ const useStyles = makeStyles(theme => ({
     borderRight: `5px solid ${theme.palette.secondary.main}`
   }
 }));
-
-const cloudy = cloudinary.Cloudinary.new({
-  cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
-});
 
 export default function Notifications({ notifications, handleMenuClose }) {
   const classes = useStyles();
@@ -59,13 +54,7 @@ export default function Notifications({ notifications, handleMenuClose }) {
   if (!notifications) return null;
 
   const notify = notifications.map(notify => {
-    const userImg = _.get(notify.case.user, "image.public_id");
-    const userImage = cloudy.url(userImg, {
-      width: 80,
-      height: 80,
-      crop: "fill",
-      secure: true
-    });
+    const userImage = retrieveImgUrl(notify.case.user, 80);
     return { ...notify, userImage };
   });
 

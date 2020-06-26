@@ -62,8 +62,7 @@ router.post(
     const { user } = req;
     const { lng, lat } = req.body.location;
     const [geocode] = await geocoder.reverse({ lat, lon: lng });
-
-    user.location = { coordinates: [lng, lat] };
+    user.location = { type: "Point", coordinates: [lng, lat] };
     user.geocode = geocode;
 
     try {

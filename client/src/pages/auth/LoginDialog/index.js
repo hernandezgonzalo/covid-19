@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import { DialogActions, Button } from "@material-ui/core";
+import { DialogActions, Button, CircularProgress } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -154,6 +154,7 @@ const LoginForm = ({ handleClose }) => {
 };
 
 const FacebookButton = ({ handleClose }) => {
+  const [isFbLoading, setIsFbLoading] = useState(false);
   const classes = useStyles();
 
   const facebookResponse = async response => {
@@ -161,18 +162,25 @@ const FacebookButton = ({ handleClose }) => {
     handleClose();
   };
 
+  const handleOnClick = onClick => {
+    setIsFbLoading(true);
+    onClick();
+  };
+
   return (
     <FacebookLogin
       appId={process.env.REACT_APP_FACEBOOK_APP_ID}
       autoLoad={false}
       callback={facebookResponse}
-      render={props => (
+      render={({ onClick }) => (
         <Button
-          onClick={props.onClick}
+          onClick={() => handleOnClick(onClick)}
           fullWidth
           variant="contained"
           className={classes.facebookLogin}
-          endIcon={<FacebookIcon />}
+          endIcon={
+            isFbLoading ? <CircularProgress size={24} /> : <FacebookIcon />
+          }
         >
           Login with Facebook
         </Button>

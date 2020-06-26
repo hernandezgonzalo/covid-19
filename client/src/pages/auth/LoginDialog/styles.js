@@ -20,6 +20,6 @@ export const useStyles = makeStyles(theme => ({
   },
   facebookLogin: {
     margin: theme.spacing(1, 0, 2),
-    color: "#4267b2"
+    color: theme.palette.primary.main
   }
 }));
