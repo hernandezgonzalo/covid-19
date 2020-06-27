@@ -33,12 +33,14 @@ const DailyDataContextProvider = ({ children }) => {
 
     getProvinces(dates)
       .then(provinces => {
-        const countries = provinces.map((p, day) =>
-          getCountries(p, dates, day)
-        );
-        if (isSubscribed) setCountries(countries);
-        const worldwide = countries.map(c => getWorldwide(c));
-        if (isSubscribed) setWorldwide(worldwide);
+        if (isSubscribed) {
+          const countries = provinces.map((p, day) =>
+            getCountries(p, dates, day)
+          );
+          setCountries(countries);
+          const worldwide = countries.map(c => getWorldwide(c));
+          setWorldwide(worldwide);
+        }
       })
       .catch(e => {
         if (!isCountries && isSubscribed)

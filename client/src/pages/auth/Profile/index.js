@@ -110,6 +110,7 @@ export const Profile = withProtected(() => {
             inputRef={register({ required: true })}
             {...inputStyle}
             error={!!errors.username}
+            disabled={!!user.facebookProvider}
           />
           <TextField
             name="password"
@@ -122,6 +123,7 @@ export const Profile = withProtected(() => {
             helperText={
               !!errors.password && "Password must be at least 4 characters long"
             }
+            disabled={!!user.facebookProvider}
           />
           <Grid container spacing={1}>
             <Grid item sm={6} xs={12}>

@@ -52,7 +52,6 @@ const LoginForm = ({ handleClose }) => {
   const { setFlash } = useContext(NotifierContext);
 
   const { register, handleSubmit, errors } = useForm({
-    mode: "onBlur",
     defaultValues: {
       username: "",
       password: ""
@@ -154,12 +153,27 @@ const LoginForm = ({ handleClose }) => {
 };
 
 const FacebookButton = ({ handleClose }) => {
+  const history = useHistory();
+  const location = useLocation();
+  const setUser = useUserSetter();
+  const { setFlash } = useContext(NotifierContext);
   const [isFbLoading, setIsFbLoading] = useState(false);
   const classes = useStyles();
 
   const facebookResponse = async response => {
-    console.log(await facebookLogin(response));
-    handleClose();
+    facebookLogin(response)
+      .then(user => {
+        setUser(user);
+        handleClose();
+        if (location.pathname === "/auth/signup") history.push("/");
+        setFlash({
+          type: "success",
+          message: `Welcome back, ${user.name}`
+        });
+      })
+      .catch(error =>
+        setFlash({ type: "error", message: error.response?.data.message })
+      );
   };
 
   const handleOnClick = onClick => {

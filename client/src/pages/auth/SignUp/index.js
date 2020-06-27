@@ -28,7 +28,7 @@ export default function SignUp() {
   const { setFlash } = useContext(NotifierContext);
   const [isProfilePic, setIsProfilePic] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const { register, handleSubmit, errors } = useForm({ mode: "onBlur" });
+  const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = async data => {
     setIsUploading(true);

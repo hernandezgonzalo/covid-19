@@ -70,14 +70,12 @@ export const upload = async file => {
 };
 
 export const login = async ({ username, password }) => {
-  const {
-    data: { user, token }
-  } = await api.post("/auth/login", {
+  const { data } = await api.post("/auth/login", {
     username,
     password
   });
-  localStorage.setItem("authToken", token);
-  return user;
+  localStorage.setItem("authToken", data.token);
+  return data.user;
 };
 
 export const logout = async () => {
@@ -92,9 +90,11 @@ export const loggedin = async () => {
 export const facebookLogin = async facebookResponse => {
   const location = await getLocation();
   const authStr = "Bearer ".concat(facebookResponse.accessToken);
-  return await api.post(
+  const { data } = await api.post(
     "/auth/facebook",
     { location },
     { headers: { Authorization: authStr } }
   );
+  localStorage.setItem("authToken", data.token);
+  return data.user;
 };

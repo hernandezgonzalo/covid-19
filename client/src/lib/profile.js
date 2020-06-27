@@ -5,7 +5,7 @@ const cloudy = cloudinary.Cloudinary.new({
   cloud_name: process.env.REACT_APP_CLOUDINARY_NAME
 });
 
-// if available returns the image from Cloudinary
+// returns the user image depending on its source
 export const retrieveImgUrl = (user, size) => {
   if (!user) return null;
   if (user.image.public_id) {

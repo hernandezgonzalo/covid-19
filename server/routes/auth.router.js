@@ -67,7 +67,8 @@ router.post(
 
     try {
       const savedUser = await User.create(user);
-      return res.json({ success: true, user: savedUser.toJSON() });
+      const token = issueToken(savedUser);
+      return res.json({ success: true, token, user: savedUser.toJSON() });
     } catch (error) {
       next(error);
     }
