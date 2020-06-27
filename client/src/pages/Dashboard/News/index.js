@@ -65,10 +65,14 @@ const News = () => {
   }, [news.articles, isLazy]);
 
   useEffect(() => {
+    let isSubscribed = true;
     getNews(news.page).then(response => {
-      newsDispatch({ type: "SET_ARTICLES", articles: response });
-      setIsLazy(false);
+      if (isSubscribed) {
+        newsDispatch({ type: "SET_ARTICLES", articles: response });
+        setIsLazy(false);
+      }
     });
+    return () => (isSubscribed = false);
   }, [news.page]);
 
   if (_.isEmpty(news.articles))

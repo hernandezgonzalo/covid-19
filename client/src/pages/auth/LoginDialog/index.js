@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import { DialogActions, Button } from "@material-ui/core";
+import { DialogActions, Button, CircularProgress } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -12,9 +12,15 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { useHistory, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useUserSetter, login } from "../../../services/authService";
+import {
+  useUserSetter,
+  login,
+  facebookLogin
+} from "../../../services/authService";
 import { NotifierContext } from "../../../contexts/NotifierContext";
 import { useStyles } from "./styles";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import FacebookIcon from "@material-ui/icons/Facebook";
 
 export default function LoginDialog({ openLogin, setOpenLogin }) {
   const [open, setOpen] = useState(false);
@@ -46,7 +52,6 @@ const LoginForm = ({ handleClose }) => {
   const { setFlash } = useContext(NotifierContext);
 
   const { register, handleSubmit, errors } = useForm({
-    mode: "onBlur",
     defaultValues: {
       username: "",
       password: ""
@@ -129,10 +134,11 @@ const LoginForm = ({ handleClose }) => {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            className={classes.localLogin}
           >
             Login
           </Button>
+          <FacebookButton handleClose={handleClose} />
           <Grid container>
             <Grid item>
               <Link href="" onClick={handleSignUp} variant="body2">
@@ -143,5 +149,56 @@ const LoginForm = ({ handleClose }) => {
         </form>
       </div>
     </Container>
+  );
+};
+
+const FacebookButton = ({ handleClose }) => {
+  const history = useHistory();
+  const location = useLocation();
+  const setUser = useUserSetter();
+  const { setFlash } = useContext(NotifierContext);
+  const [isFbLoading, setIsFbLoading] = useState(false);
+  const classes = useStyles();
+
+  const facebookResponse = async response => {
+    facebookLogin(response)
+      .then(user => {
+        setUser(user);
+        handleClose();
+        if (location.pathname === "/auth/signup") history.push("/");
+        setFlash({
+          type: "success",
+          message: `Welcome back, ${user.name}`
+        });
+      })
+      .catch(error =>
+        setFlash({ type: "error", message: error.response?.data.message })
+      );
+  };
+
+  const handleOnClick = onClick => {
+    setIsFbLoading(true);
+    onClick();
+  };
+
+  return (
+    <FacebookLogin
+      appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+      autoLoad={false}
+      callback={facebookResponse}
+      render={({ onClick }) => (
+        <Button
+          onClick={() => handleOnClick(onClick)}
+          fullWidth
+          variant="contained"
+          className={classes.facebookLogin}
+          endIcon={
+            isFbLoading ? <CircularProgress size={24} /> : <FacebookIcon />
+          }
+        >
+          Login with Facebook
+        </Button>
+      )}
+    />
   );
 };

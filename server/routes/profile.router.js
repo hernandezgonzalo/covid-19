@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const Case = require("../models/Case");
+const Notification = require("../models/Notification");
 const { ensureAuthenticated } = require("../middlewares/authentication");
 const uploadCloudinaryAvatar = require("../middlewares/uploadImage");
 const geocoder = require("../lib/geocoder");
 const { issueToken } = require("../lib/token");
+const { removeNearCase } = require("../lib/notifyNearCase");
 
 router.get("/", ensureAuthenticated, (req, res, next) => {
   res.json({ success: true, user: req.user.toJSON() });
@@ -65,6 +68,8 @@ router.post(
 // delete account
 router.get("/delete", ensureAuthenticated, async (req, res, next) => {
   try {
+    const removedCase = await Case.findOneAndDelete({ user: req.user._id });
+    if (removedCase) await Notification.deleteMany({ case: removedCase.id });
     await User.findByIdAndDelete(req.user._id);
     return res.json({ success: true });
   } catch (error) {
