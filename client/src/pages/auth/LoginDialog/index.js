@@ -186,6 +186,7 @@ const FacebookButton = ({ handleClose }) => {
       appId={process.env.REACT_APP_FACEBOOK_APP_ID}
       autoLoad={false}
       callback={facebookResponse}
+      disableMobileRedirect={true}
       render={({ onClick }) => (
         <Button
           onClick={() => handleOnClick(onClick)}
