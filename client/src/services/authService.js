@@ -89,6 +89,7 @@ export const loggedin = async () => {
 
 export const facebookLogin = async facebookResponse => {
   const location = await getLocation();
+  localStorage.removeItem("authToken");
   const authStr = "Bearer ".concat(facebookResponse.accessToken);
   const { data } = await api.post(
     "/auth/facebook",
