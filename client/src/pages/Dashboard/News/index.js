@@ -20,7 +20,7 @@ import { getNews } from "../../../services/news.api";
 const useStyles = makeStyles(theme => ({
   newsWrapper: {
     height: "calc(100vh - 80px)",
-    overflow: "scroll",
+    overflow: "auto",
     [theme.breakpoints.down("md")]: { display: "none" }
   }
 }));
@@ -56,7 +56,7 @@ const News = () => {
     if (current) {
       current.onscroll = e => {
         const { scrollHeight, scrollTop, clientHeight } = e.target;
-        if (scrollHeight - (scrollTop + clientHeight) === 0 && !isLazy) {
+        if (scrollHeight - (scrollTop + clientHeight) < 10 && !isLazy) {
           setIsLazy(true);
           newsDispatch({ type: "INCREASE_PAGE" });
         }
