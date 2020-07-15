@@ -191,6 +191,16 @@ export const Navbar = ({ toggleTheme }) => {
           <span>Toggle theme</span>
         </ToggleTheme>
       </MenuItem>
+      <MenuItem
+        onClick={() =>
+          window.open("https://github.com/hernandezgonzalo/covid-19")
+        }
+      >
+        <IconButton aria-label="View code" color="inherit">
+          <Icon className="fab fa-github" />
+        </IconButton>
+        <span>View code</span>
+      </MenuItem>
       <MenuItem>
         <SearchDialog>
           <span>Find a country</span>
@@ -239,6 +249,17 @@ export const Navbar = ({ toggleTheme }) => {
               </IconButton>
             </Tooltip>
             <SearchDialog />
+            <Tooltip title="View code">
+              <IconButton
+                aria-label="View code"
+                color="inherit"
+                onClick={() =>
+                  window.open("https://github.com/hernandezgonzalo/covid-19")
+                }
+              >
+                <Icon className="fab fa-github" />
+              </IconButton>
+            </Tooltip>
             <ToggleTheme theme={theme} toggleTheme={toggleTheme} />
             {user && (
               <Tooltip title="Notifications">
