@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useLayoutEffect,
-  useRef,
-  useReducer
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useReducer } from "react";
 import {
   makeStyles,
   Paper,
@@ -34,43 +28,43 @@ const Loading = () => (
 const newsReducer = (state, action) => {
   switch (action.type) {
     case "INCREASE_PAGE":
-      return { ...state, page: state.page + 1 };
+      return { ...state, page: state.page + 1, isLazy: true };
     case "SET_ARTICLES":
-      return { ...state, articles: [...state.articles, ...action.articles] };
+      return {
+        ...state,
+        articles: [...state.articles, ...action.articles],
+        isLazy: false
+      };
     default:
       throw new Error();
   }
 };
 
 const News = () => {
+  const newsRef = useRef();
+  const classes = useStyles();
   const [news, newsDispatch] = useReducer(newsReducer, {
     page: 0,
-    articles: []
+    articles: [],
+    isLazy: true
   });
-  const newsRef = useRef();
-  const [isLazy, setIsLazy] = useState(false);
-  const classes = useStyles();
 
   useLayoutEffect(() => {
     const { current } = newsRef;
     if (current) {
       current.onscroll = e => {
         const { scrollHeight, scrollTop, clientHeight } = e.target;
-        if (scrollHeight - (scrollTop + clientHeight) < 10 && !isLazy) {
-          setIsLazy(true);
+        if (scrollHeight - (scrollTop + clientHeight) < 10 && !news.isLazy)
           newsDispatch({ type: "INCREASE_PAGE" });
-        }
       };
     }
-  }, [news.articles, isLazy]);
+  }, [news.isLazy]);
 
   useEffect(() => {
     let isSubscribed = true;
     getNews(news.page).then(response => {
-      if (isSubscribed) {
+      if (isSubscribed)
         newsDispatch({ type: "SET_ARTICLES", articles: response });
-        setIsLazy(false);
-      }
     });
     return () => (isSubscribed = false);
   }, [news.page]);
@@ -97,7 +91,7 @@ const News = () => {
         {news.articles.map((article, i) => (
           <NewsCard key={i} {...article} />
         ))}
-        {isLazy && <Loading />}
+        {news.isLazy && <Loading />}
       </Box>
     </Grid>
   );
