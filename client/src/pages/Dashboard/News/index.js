@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useReducer } from "react";
+import React, { useEffect, useRef, useReducer } from "react";
 import {
   makeStyles,
   Paper,
@@ -49,7 +49,7 @@ const News = () => {
     isLazy: true
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const { current } = newsRef;
     if (current) {
       current.onscroll = e => {
@@ -62,10 +62,11 @@ const News = () => {
 
   useEffect(() => {
     let isSubscribed = true;
-    getNews(news.page).then(response => {
-      if (isSubscribed)
-        newsDispatch({ type: "SET_ARTICLES", articles: response });
-    });
+    getNews(news.page)
+      .then(articles => {
+        if (isSubscribed) newsDispatch({ type: "SET_ARTICLES", articles });
+      })
+      .catch(console.error);
     return () => (isSubscribed = false);
   }, [news.page]);
 
