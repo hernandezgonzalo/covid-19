@@ -6,7 +6,7 @@ const api = axios.create({
 
 export const getNews = async page => {
   try {
-    const response = await api.get("/articlesearch.json", {
+    const { data } = await api.get("/articlesearch.json", {
       params: {
         "api-key": process.env.REACT_APP_NEWS_API_KEY,
         q: '("coronavirus" "covid")',
@@ -16,8 +16,8 @@ export const getNews = async page => {
         page
       }
     });
-    return response.data.response.docs;
+    return data.response.docs;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
