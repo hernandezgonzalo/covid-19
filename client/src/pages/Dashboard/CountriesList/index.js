@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { UpToDateDataContext } from "../../../contexts/UpToDateDataContext";
 import {
   Table,
   makeStyles,
@@ -11,8 +10,11 @@ import {
   Typography
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
-import ListItem from "./ListItem";
 import _ from "lodash";
+import { UpToDateDataContext } from "../../../contexts/UpToDateDataContext";
+import ListItem from "./ListItem";
+
+const COUNTRIES_TO_SHOW = 50;
 
 const useStyles = makeStyles(theme => ({
   listWrapper: {
@@ -27,8 +29,6 @@ const useStyles = makeStyles(theme => ({
 const UpdatedList = () => {
   const { countries } = useContext(UpToDateDataContext);
   const classes = useStyles();
-
-  const countriesToShow = 50;
 
   if (_.isEmpty(countries))
     return (
@@ -50,13 +50,13 @@ const UpdatedList = () => {
         >
           <Table size="small" aria-label="countries list">
             <TableBody>
-              {countries.slice(0, countriesToShow).map(country => (
+              {countries.slice(0, COUNTRIES_TO_SHOW).map(country => (
                 <ListItem key={country.countryRegion} {...{ country }} />
               ))}
             </TableBody>
           </Table>
           <Typography variant="body2" align="center" color="textSecondary">
-            Showing {countriesToShow} of {countries.length} territories
+            Showing {COUNTRIES_TO_SHOW} of {countries.length} territories
           </Typography>
         </TableContainer>
       </Box>
