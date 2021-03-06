@@ -7,9 +7,10 @@ import {
   CircularProgress
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
-import NewsCard from "./NewsCard";
 import _ from "lodash";
+import NewsCard from "./NewsCard";
 import { getNews } from "../../../services/news.api";
+import newsReducer from "../../../reducers/newsReducer";
 
 const useStyles = makeStyles(theme => ({
   newsWrapper: {
@@ -25,21 +26,6 @@ const Loading = () => (
   </Box>
 );
 
-const newsReducer = (state, action) => {
-  switch (action.type) {
-    case "INCREASE_PAGE":
-      return { ...state, page: state.page + 1, isLazy: true };
-    case "SET_ARTICLES":
-      return {
-        ...state,
-        articles: [...state.articles, ...action.articles],
-        isLazy: false
-      };
-    default:
-      throw new Error();
-  }
-};
-
 const News = () => {
   const newsRef = useRef();
   const classes = useStyles();
@@ -48,29 +34,30 @@ const News = () => {
     articles: [],
     isLazy: true
   });
+  const { page, articles, isLazy } = news;
 
   useEffect(() => {
     const { current } = newsRef;
     if (current) {
       current.onscroll = e => {
         const { scrollHeight, scrollTop, clientHeight } = e.target;
-        if (scrollHeight - (scrollTop + clientHeight) < 10 && !news.isLazy)
+        if (scrollHeight - (scrollTop + clientHeight) < 10 && !isLazy)
           newsDispatch({ type: "INCREASE_PAGE" });
       };
     }
-  }, [news.isLazy]);
+  }, [isLazy]);
 
   useEffect(() => {
     let isSubscribed = true;
-    getNews(news.page)
+    getNews(page)
       .then(articles => {
         if (isSubscribed) newsDispatch({ type: "SET_ARTICLES", articles });
       })
       .catch(console.error);
     return () => (isSubscribed = false);
-  }, [news.page]);
+  }, [page]);
 
-  if (_.isEmpty(news.articles))
+  if (_.isEmpty(articles))
     return (
       <Grid item xs={12} md={4} lg={3}>
         <Box m={1} textAlign="center">
@@ -89,10 +76,10 @@ const News = () => {
         className={classes.newsWrapper}
         ref={newsRef}
       >
-        {news.articles.map((article, i) => (
+        {articles.map((article, i) => (
           <NewsCard key={i} {...article} />
         ))}
-        {news.isLazy && <Loading />}
+        {isLazy && <Loading />}
       </Box>
     </Grid>
   );

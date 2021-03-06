@@ -1,5 +1,5 @@
 {
-  "countriesToAdjust": ["US", "Brazil", "Chile", "Peru"],
+  "countriesToAdjust": [],
   "countriesToRename": [
     ["China", ["Mainland China"]],
     ["Korea, South", ["Republic of Korea", "South Korea"]],
