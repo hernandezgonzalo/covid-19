@@ -5,8 +5,8 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import TimeAgo from "../../../components/ui/TimeAgo";
 import { parseISO } from "date-fns";
+import TimeAgo from "../../../components/ui/TimeAgo";
 
 const useStyles = makeStyles({
   title: { fontSize: "1rem", lineHeight: "1.2rem" },
